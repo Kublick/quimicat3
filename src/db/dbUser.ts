@@ -1,10 +1,16 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from '../server/db/client';
 
-export const checkUserPassword = async (email: string, password: string) => {
-	const user = await prisma.user.findUnique({
+export const checkUserPassword = async (username: string, password: string) => {
+	console.log(username, password);
+
+	const user = await prisma.user.findFirstOrThrow({
 		where: {
-			email,
+			username,
+		},
+		include: {
+			Profile: true,
+			Sucursal: true,
 		},
 	});
 
@@ -16,11 +22,16 @@ export const checkUserPassword = async (email: string, password: string) => {
 		return null;
 	}
 
+	let enabledFeatures = user.Profile?.enabledFeatures;
+	let sucursal = user.Sucursal?.nombre;
+
 	const { id, name } = user;
 
 	return {
 		id,
 		name,
-		email: user.email,
+		username,
+		enabledFeatures,
+		sucursal,
 	};
 };

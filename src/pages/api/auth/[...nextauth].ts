@@ -14,9 +14,9 @@ export const authOptions: NextAuthOptions = {
 			name: 'Credentials',
 			credentials: {
 				name: {
-					label: 'Name',
+					label: 'Usuario',
 					type: 'text',
-					placeholder: 'Enter your name',
+					placeholder: 'Ingresa tu usuario',
 				},
 				email: {
 					label: 'Email',
@@ -46,12 +46,20 @@ export const authOptions: NextAuthOptions = {
 		signIn: '/auth/login',
 	},
 	session: {
-		maxAge: (1000 * 60 * 60) ^ 8,
+		maxAge: 4000 * 60 * 60,
 		strategy: 'jwt',
-		updateAge: 1000 * 60 * 8,
+		updateAge: 1000 * 60 * 4,
 	},
 	callbacks: {
-		async jwt({ token }) {
+		async jwt({ token, account, user }) {
+			if (account) {
+				token.accessToken = account.access_token;
+				switch (account.type) {
+					case 'credentials':
+						token.user = user;
+						break;
+				}
+			}
 			return token;
 		},
 		async session({ session, token }) {

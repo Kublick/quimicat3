@@ -1,4 +1,5 @@
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 import { useForm } from 'react-hook-form';
 import { trpc } from '../../utils/trpc';
@@ -7,9 +8,11 @@ type FormData = {
 	name: string;
 	email: string;
 	password: string;
+	username: string;
 };
 
 const Login = () => {
+	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
@@ -17,6 +20,7 @@ const Login = () => {
 	} = useForm({
 		defaultValues: {
 			name: '',
+			username: '',
 			email: '',
 			password: '',
 		},
@@ -31,6 +35,10 @@ const Login = () => {
 			redirect: false,
 		});
 
+		if (res?.ok) {
+			router.push('/');
+		}
+
 		console.log(res);
 	};
 
@@ -38,7 +46,11 @@ const Login = () => {
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex flex-col justify-center items-center gap-4">
 				<label>Usuario</label>
-				<input type="text" className="bg-slate-200 " {...register('name')} />
+				<input
+					type="text"
+					className="bg-slate-200 "
+					{...register('username')}
+				/>
 				<label>email</label>
 				<input type="text" className="bg-slate-200 " {...register('email')} />
 				<label>password</label>
