@@ -11,7 +11,35 @@ const createPerfiles = async () => {
 		data: [
 			{
 				nombre: 'Admin',
-				enabledFeatures: ['showProfile', 'addUpdateProfile', 'deleteProfile'],
+				enabledFeatures: {
+					security: ['showPerfil', 'addUpdatePerfil', 'deletePerfil'],
+					users: [
+						'showUser',
+						'addUpdateUser',
+						'deleteUser',
+						'showUsers',
+						'addUpdateUsers',
+						'deleteUsers',
+					],
+					patients: ['showPatients', 'addUpdatePatients', 'deletePatients'],
+					config: [
+						'showConfigPerfiles',
+						'addUpdateConfigPerfiles',
+						'deleteConfigPerfiles',
+						'showConfigPruebas',
+						'addUpdateConfigPruebas',
+						'deleteConfigPrueba',
+						'configDepartamento',
+						'configMetodo',
+					],
+					medicos: [
+						'addMedico',
+						'showMedicos',
+						'addUpdateMedicos',
+						'deleteMedicos',
+					],
+					cliente: ['showClientes', 'addUpdateClientes'],
+				},
 			},
 			{
 				nombre: 'User',

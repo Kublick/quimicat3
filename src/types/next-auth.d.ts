@@ -1,5 +1,4 @@
 import NextAuth from 'next-auth';
-import { IPerfil, ISucursal } from '../interfaces';
 
 declare module 'next-auth' {
 	/**

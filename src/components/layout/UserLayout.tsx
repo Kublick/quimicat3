@@ -50,7 +50,6 @@ const DivTitle = styled('div', {
 
 export const UserLayout: NextPage<Props> = ({ children, title }) => {
 	const { data: session, status } = useSession();
-
 	const router = useRouter();
 
 	const { setFeatures, setMenuFeatures } = uiContext();
@@ -58,8 +57,30 @@ export const UserLayout: NextPage<Props> = ({ children, title }) => {
 
 	useEffect(() => {
 		if (session && status === 'authenticated') {
-			setMenuFeatures(session.user.enabledFeatures);
-			setUser(session.user);
+			const enabledFeaturesHasItems = Object.entries(
+				session.user.enabledFeatures,
+			).reduce((acc, [_, value]: any): any => {
+				return [...acc, ...value];
+			}, []);
+			console.log(
+				'🚀 ~ file: UserLayout.tsx ~ line 70 ~ useEffect ~ enabledFeaturesHasItems ',
+				enabledFeaturesHasItems,
+			);
+
+			const menuFeature = Object.entries(session.user.enabledFeatures).map(
+				([key, value]: any) => {
+					if (value.length !== 0) {
+						return key;
+					}
+				},
+			);
+			console.log(
+				'🚀 ~ file: UserLayout.tsx ~ line 77 ~ useEffect ~ menuFeature',
+				menuFeature,
+			);
+
+			setMenuFeatures(menuFeature);
+			setFeatures(enabledFeaturesHasItems);
 		}
 	}, [session, setFeatures, setUser, status, setMenuFeatures, user]);
 
