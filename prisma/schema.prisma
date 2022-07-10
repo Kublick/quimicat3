@@ -42,6 +42,15 @@ model Departamento {
     nombre String
 }
 
+model Muestra {
+    id            String  @id @default(cuid())
+    clave         String
+    descripcion   String
+    nombreTubo    String
+    barCode       Boolean @default(false)
+    excludeStatus Boolean @default(false)
+}
+
 model Metodo {
     id     String @id @default(cuid())
     nombre String
