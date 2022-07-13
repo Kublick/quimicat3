@@ -1,8 +1,8 @@
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, Input, Loading, Text } from "@nextui-org/react";
-import { useRouter } from "next/router";
-import React from "react";
-import { useForm } from "react-hook-form";
 import { UserLayout } from "../../../components/layout";
 import { IUser, userValidation } from "../../../intefaces/user";
 import { SLabel, SSelect } from "../../../styles/SelectStyles";
@@ -11,6 +11,9 @@ import { trpc } from "../../../utils/trpc";
 
 const NewUserPage = () => {
   const router = useRouter();
+
+  const [disabled, setDisabled] = useState(false);
+
   const { data: sucursales, error: sucursalError } = trpc.useQuery([
     "security.getSucursales",
   ]);
@@ -163,7 +166,7 @@ const NewUserPage = () => {
               <Button
                 type="submit"
                 css={{ mt: 24 }}
-                // disabled={mode === 'view' || disabled}
+                disabled={disabled}
               >
                 Guardar
               </Button>

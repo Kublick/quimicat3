@@ -7,13 +7,15 @@ import { authOptions as nextAuthOptions } from "../../pages/api/auth/[...nextaut
 import { prisma } from "../db/client";
 
 export const createContext = async (
-  opts?: trpcNext.CreateNextContextOptions,
+  opts?: trpcNext.CreateNextContextOptions
 ) => {
   const req = opts?.req;
   const res = opts?.res;
 
   const session =
     req && res && (await getServerSession(req, res, nextAuthOptions));
+
+  console.log("session", session);
 
   return {
     req,

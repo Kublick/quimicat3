@@ -55,14 +55,6 @@ export const UserLayout: NextPage<Props> = ({ children, title }) => {
   const { setFeatures, setMenuFeatures } = uiContext();
   const { setUser, user } = authContext();
 
-  // if (session === null) {
-  //   console.log(
-  //     "🚀 ~ file: UserLayout.tsx ~ line 61 ~ useEffect ~ session",
-  //     session
-  //   );
-  //   router.push("/auth/login");
-  // }
-
   useEffect(() => {
     if (session && status === "authenticated") {
       const enabledFeaturesHasItems = Object.entries(

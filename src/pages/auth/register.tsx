@@ -9,15 +9,7 @@ import { ExclamationCircleIcon } from "@heroicons/react/solid";
 import { SLabel, SSelect } from "../../styles/SelectStyles";
 import { Box } from "../../styles/TableStyles";
 import { useRouter } from "next/router";
-
-export const userValidationSchema = z.object({
-  name: z.string().min(3),
-  password: z.string().min(3).max(12),
-  username: z.string().min(3),
-  status: z.enum(["active", "inactive"]),
-  sucursal: z.string(),
-  profile: z.string(),
-});
+import { userValidation } from "../../intefaces/user";
 
 const RegisterUser = () => {
   const [showError, setShowError] = useState(false);
@@ -35,18 +27,17 @@ const RegisterUser = () => {
         rawValues: true,
       }),
     });
-
     return form;
   }
 
   const methods = useZodForm({
-    schema: userValidationSchema,
+    schema: userValidation,
     defaultValues: {
       name: "",
       password: "",
       status: "active",
-      sucursal: "",
-      profile: "",
+      sucursalId: "",
+      profileId: "",
     },
   });
 
@@ -132,7 +123,7 @@ const RegisterUser = () => {
           </SSelect>
           <Spacer y={1} />
           <SLabel aria-label="perfil">Perfil</SLabel>
-          <SSelect {...methods.register("profile")} name="profile">
+          <SSelect {...methods.register("profileId")} name="profile">
             <option value="">Seleccione un perfil</option>
             {profiles.map((perfil) => (
               <option key={perfil.id} value={perfil.id}>
@@ -142,7 +133,7 @@ const RegisterUser = () => {
           </SSelect>
           <Spacer y={1} />
           <SLabel>Sucursal</SLabel>
-          <SSelect {...methods.register("sucursal")}>
+          <SSelect {...methods.register("sucursalId")}>
             <option value="">Seleccione un sucursal</option>
             {sucursales.map((sucursal) => (
               <option key={sucursal.id} value={sucursal.id}>
