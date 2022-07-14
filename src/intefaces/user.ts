@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const userValidation = z.object({
+  id: z.string(),
   name: z.string().min(3),
   password: z.string().min(3).max(12),
   username: z.string().min(6).max(12),

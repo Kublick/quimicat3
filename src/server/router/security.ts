@@ -1,5 +1,4 @@
 import { createRouter } from "./context";
-import { z } from "zod";
 
 export const securityRouter = createRouter()
   .query("getSucursales", {
@@ -14,6 +13,11 @@ export const securityRouter = createRouter()
   })
   .query("getUsers", {
     async resolve({ ctx }) {
-      return await ctx.prisma.user.findMany();
+      return await ctx.prisma.user.findMany({
+        include: {
+          Profile: true,
+          Sucursal: true,
+        },
+      });
     },
   });
