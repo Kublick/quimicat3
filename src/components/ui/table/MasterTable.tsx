@@ -1,32 +1,115 @@
-import { PencilIcon } from "@heroicons/react/solid";
-import { Card, Col, Row, Tooltip } from "@nextui-org/react";
+import {
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+} from "@heroicons/react/solid";
+import { Button, Card } from "@nextui-org/react";
 import {
   ColumnDef,
+  ColumnFiltersState,
+  FilterFn,
   flexRender,
   getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingFn,
+  sortingFns,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { FC, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SBody,
   SHeader,
   SHeaderLabel,
   STable,
+  STD,
   STH,
 } from "../../../styles/TableStyles";
-import { IconButton } from "../../ui/utils/IconButton";
+import {
+  RankingInfo,
+  rankItem,
+  compareItems,
+} from "@tanstack/match-sorter-utils";
+import { TableDebounceInput } from "./TableDebounceInput";
+import { SSelect } from "../../../styles/SelectStyles";
+
+declare module "@tanstack/table-core" {
+  interface FilterMeta {
+    itemRank: RankingInfo;
+  }
+}
 
 type Props<T> = {
   rows: T[];
   columns: ColumnDef<T>[];
 };
 
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value);
+
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  });
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed;
+};
+
+const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+  let dir = 0;
+
+  // Only sort by rank if the column has ranking information
+  if (rowA.columnFiltersMeta[columnId]) {
+    dir = compareItems(
+      rowA.columnFiltersMeta[columnId]?.itemRank!,
+      rowB.columnFiltersMeta[columnId]?.itemRank!
+    );
+  }
+
+  // Provide an alphanumeric fallback for when the item ranks are equal
+  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
+};
+
 const MasterTable = <T,>({ rows, columns }: Props<T>) => {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+
   const table = useReactTable({
     data: rows,
     columns,
+    state: {
+      columnFilters,
+      globalFilter,
+    },
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: false,
   });
+
+  useEffect(() => {
+    if (table.getState().columnFilters[0]?.id === "fullName") {
+      if (table.getState().sorting[0]?.id !== "fullName") {
+        table.setSorting([{ id: "fullName", desc: false }]);
+      }
+    }
+  }, [table]);
 
   return (
     <Card
@@ -36,18 +119,38 @@ const MasterTable = <T,>({ rows, columns }: Props<T>) => {
         mx: "2rem",
       }}
     >
+      <TableDebounceInput
+        value={globalFilter ?? ""}
+        onChange={(value) => setGlobalFilter(String(value))}
+      />
+
       <STable>
         <SHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <SHeaderLabel key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <STH key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                <STH key={header.id} colSpan={header.colSpan}>
+                  {header.isPlaceholder ? null : (
+                    <>
+                      <div
+                        {...{
+                          className: header.column.getCanSort()
+                            ? "cursor-pointer select-none flex gap-4 items-center justify-center"
+                            : "",
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: <ChevronUpIcon className="w-5 h-5" />,
+                          desc: <ChevronDownIcon className="w-5 h-5" />,
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    </>
+                  )}
                 </STH>
               ))}
             </SHeaderLabel>
@@ -57,14 +160,52 @@ const MasterTable = <T,>({ rows, columns }: Props<T>) => {
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
+                <STD key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+                </STD>
               ))}
             </tr>
           ))}
         </SBody>
       </STable>
+      <div className="h-2" />
+      <div className="flex items-center justify-center gap-2">
+        <Button
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+          auto
+        >
+          <ChevronLeftIcon className="w-5 h-5" />
+        </Button>
+
+        <strong>
+          {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </strong>
+
+        <Button
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+          auto
+        >
+          <ChevronRightIcon className="w-5 h-5" />
+        </Button>
+
+        <div>
+          <SSelect
+            value={table.getState().pagination.pageSize}
+            onChange={(e) => {
+              table.setPageSize(Number(e.target.value));
+            }}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Mostrar {pageSize}
+              </option>
+            ))}
+          </SSelect>
+        </div>
+      </div>
+      <div className="ml-4">{table.getRowModel().rows.length} Registros</div>
     </Card>
   );
 };

@@ -32,7 +32,7 @@ const NewUserPage = () => {
       name: "",
       username: "",
       password: "",
-      status: "active",
+      status: "activo",
       profileId: "",
       sucursalId: "",
     },
@@ -163,11 +163,7 @@ const NewUserPage = () => {
               >
                 Regresar
               </Button>
-              <Button
-                type="submit"
-                css={{ mt: 24 }}
-                disabled={disabled}
-              >
+              <Button type="submit" css={{ mt: 24 }} disabled={disabled}>
                 Guardar
               </Button>
             </Box>
