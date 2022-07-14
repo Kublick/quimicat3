@@ -87,7 +87,7 @@ const NewUserPage: FC<Props> = ({ user, mode }) => {
       </UserLayout>
     );
   }
-  console.log("errors", errors);
+
   const onSubmit = async (data: IUser) => {
     setDisabled(true);
     if (mode === "new") {
