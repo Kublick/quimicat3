@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { AuthLayout } from "../../components/layout";
 import { Box } from "../../styles/TableStyles";
 
+
 type FormData = {
   password: string;
   username: string;

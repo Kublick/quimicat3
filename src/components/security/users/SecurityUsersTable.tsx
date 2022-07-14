@@ -31,8 +31,8 @@ export const SecurityUsersTable = () => {
       name: item.name || "",
       username: item.username || "",
       profileId: item.Profile?.nombre || "",
-      // role: item.role || "",
-      status: item.status as "active" | "inactive",
+      role: item.role || "",
+      status: item.status as "activo" | "inactivo",
       sucursalId: item.Sucursal?.nombre || "",
       password: "",
     })

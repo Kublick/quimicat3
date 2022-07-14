@@ -15,13 +15,13 @@ model User {
     name       String?
     password   String
     username   String?   @unique
-    role       String?   @default("user")
+    role       String?   @default("usuario")
     image      String?
     Sucursal   Sucursal? @relation(fields: [sucursalId], references: [id])
     sucursalId String?
     Profile    Profile?  @relation(fields: [profileId], references: [id])
     profileId  String?
-    status     String?   @default("active")
+    status     String?   @default("activo")
 }
 
 model Sucursal {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,11 +8,40 @@ import { IUser, userValidation } from "../../../intefaces/user";
 import { SLabel, SSelect } from "../../../styles/SelectStyles";
 import { Box } from "../../../styles/TableStyles";
 import { trpc } from "../../../utils/trpc";
+import { z } from "zod";
+import { GetServerSideProps } from "next";
+import { prisma } from "../../../server/db/client";
+import { toast } from "react-toastify";
 
-const NewUserPage = () => {
+const regexValidation = z.string().regex(/^c\w{8}\d+\w{4}\w{8}$/g);
+
+type Props = {
+  user: IUser;
+  mode: string;
+};
+
+const NewUserPage: FC<Props> = ({ user, mode }) => {
   const router = useRouter();
 
   const [disabled, setDisabled] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<IUser>({
+    defaultValues: {
+      name: "",
+      username: "",
+      status: "activo",
+      password: "",
+      profileId: "",
+      sucursalId: "",
+    },
+    mode: "onBlur",
+    resolver: zodResolver(userValidation),
+  });
 
   const { data: sucursales, error: sucursalError } = trpc.useQuery([
     "security.getSucursales",
@@ -21,24 +50,17 @@ const NewUserPage = () => {
     "security.getProfiles",
   ]);
 
-  const mutation = trpc.useMutation(["users.createUser"]);
+  useEffect(() => {
+    if (user) {
+      reset({
+        ...user,
+        password: "1234",
+      });
+    }
+  }, [user, reset]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IUser>({
-    defaultValues: {
-      name: "",
-      username: "",
-      password: "",
-      status: "activo",
-      profileId: "",
-      sucursalId: "",
-    },
-    mode: "onBlur",
-    resolver: zodResolver(userValidation),
-  });
+  const createUser = trpc.useMutation(["users.createUser"]);
+  const updateUser = trpc.useMutation(["users.updateUser"]);
 
   if (!sucursales || !profiles) {
     return (
@@ -65,15 +87,48 @@ const NewUserPage = () => {
       </UserLayout>
     );
   }
-
+  console.log("errors", errors);
   const onSubmit = async (data: IUser) => {
-    await mutation.mutateAsync(data);
-    console.log(data);
+    setDisabled(true);
+    if (mode === "new") {
+      await createUser.mutateAsync(data);
+      toast.success("Usuario creado correctamente");
+    }
+
+    if (mode === "edit") {
+      const updateUserData = {
+        id: data.id || "",
+        name: data.name,
+        username: data.username,
+        status: data.status as "activo" | "inactivo",
+        profileId: data.profileId,
+        sucursalId: data.sucursalId,
+      };
+      await updateUser.mutateAsync(updateUserData);
+      toast.success("Usuario actualizado correctamente");
+    }
+
+    setTimeout(() => {
+      setDisabled(false);
+      router.push("/security/users");
+    }, 2000);
   };
+
+  let textMode = "";
+
+  switch (mode) {
+    case "edit":
+      textMode = "Editar Usuario";
+      break;
+
+    default:
+      textMode = "Registrar Usuario";
+      break;
+  }
 
   return (
     <UserLayout title="Usuarios">
-      <Text h4>Crear Usuarios</Text>
+      <Text h4>{textMode}</Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           css={{
@@ -115,14 +170,15 @@ const NewUserPage = () => {
               helperText={errors?.password?.message}
               helperColor="error"
               status={errors?.password ? "error" : "primary"}
+              disabled={mode === "edit"}
             />
             <Box>
               <SLabel>Status</SLabel>
               <SSelect {...register("status")}>
-                <option value="active" defaultValue={"active"}>
+                <option value="activo" defaultValue={"activo"}>
                   Activo
                 </option>
-                <option value="inactive">Inactivo</option>
+                <option value="inactivo">Inactivo</option>
               </SSelect>
             </Box>
             <Box>
@@ -175,3 +231,37 @@ const NewUserPage = () => {
 };
 
 export default NewUserPage;
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { id, view } = query;
+
+  if (regexValidation.safeParse(id).success === true) {
+    const user = await prisma.user.findFirst({
+      where: {
+        id: id as string,
+      },
+    });
+
+    return {
+      props: {
+        user,
+        mode: "edit",
+      },
+    };
+  }
+
+  if (view === "new") {
+    return {
+      props: {
+        mode: "new",
+      },
+    };
+  }
+
+  return {
+    props: {},
+    redirect: {
+      destination: "/",
+    },
+  };
+};

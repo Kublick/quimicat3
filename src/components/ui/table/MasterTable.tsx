@@ -179,7 +179,7 @@ const MasterTable = <T,>({ rows, columns }: Props<T>) => {
         </Button>
 
         <strong>
-          {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+          {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
         </strong>
 
         <Button

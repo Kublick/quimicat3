@@ -35,7 +35,7 @@ const RegisterUser = () => {
     defaultValues: {
       name: "",
       password: "",
-      status: "active",
+      status: "activo",
       sucursalId: "",
       profileId: "",
     },

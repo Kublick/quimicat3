@@ -16,6 +16,11 @@ const columns: ColumnDef<IUser>[] = [
     cell: (info) => info.getValue(),
   },
   {
+    accessorKey: "role",
+    header: () => "Rol",
+    cell: (info) => info.getValue(),
+  },
+  {
     accessorKey: "profileId",
     header: () => "Perfil",
     cell: (info) => info.getValue(),
