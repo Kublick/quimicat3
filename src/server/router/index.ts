@@ -4,10 +4,12 @@ import superjson from "superjson";
 import { authRouter } from "./auth";
 import { userRouter } from "./userRouter";
 import { securityRouter } from "./security";
+import { configuracionRouter } from "./configuracionRouter";
 
 export const appRouter = createRouter()
   .transformer(superjson)
   .merge("security.", securityRouter)
+  .merge("configuracion.", configuracionRouter)
   .merge("users.", userRouter)
   .merge("auth.", authRouter);
 

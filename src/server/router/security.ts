@@ -27,7 +27,6 @@ export const securityRouter = createRouter()
     async resolve({ input, ctx }) {
       return await ctx.prisma.profile.create({
         data: {
-          id: input.id,
           nombre: input.nombre,
           enabledFeatures: { ...input.enabledFeatures },
         },
