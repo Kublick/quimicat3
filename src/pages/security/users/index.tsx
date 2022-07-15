@@ -14,6 +14,7 @@ const SecurityUsersPage = () => {
         css={{
           display: "flex",
           justifyContent: "flex-end",
+          mb: "1rem",
         }}
       >
         <Button

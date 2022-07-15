@@ -52,7 +52,7 @@ export const userRouter = createRouter()
             id,
           },
         });
-        const userWithOutPassword = exclude(user, "password");
+        const userWithOutPassword: any = exclude(user, "password");
         return userWithOutPassword;
       }
     },

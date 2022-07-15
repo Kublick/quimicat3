@@ -1,3 +1,4 @@
+import { profileValidation } from "../../intefaces/profile";
 import { createRouter } from "./context";
 
 export const securityRouter = createRouter()
@@ -17,6 +18,29 @@ export const securityRouter = createRouter()
         include: {
           Profile: true,
           Sucursal: true,
+        },
+      });
+    },
+  })
+  .mutation("createProfile", {
+    input: profileValidation,
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.profile.create({
+        data: {
+          id: input.id,
+          nombre: input.nombre,
+          enabledFeatures: { ...input.enabledFeatures },
+        },
+      });
+    },
+  })
+  .mutation("profileUpdate", {
+    input: profileValidation,
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.profile.update({
+        where: { id: input.id },
+        data: {
+          ...input,
         },
       });
     },
