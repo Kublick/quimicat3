@@ -4,20 +4,17 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
 import { IDepartamento } from "../../../intefaces/departamento";
+import { uiContext } from "../../../store/uiSlice";
 import { trpc } from "../../../utils/trpc";
 import MasterTable from "../../ui/table/MasterTable";
 import { IconButton } from "../../ui/utils/IconButton";
 
 type Props = {
-  setShowModal: (showModal: boolean) => void;
   setDepartamento: (departamento: IDepartamento) => void;
 };
 
-const ConfiguracionDepartamentoTable: FC<Props> = ({
-  setShowModal,
-  setDepartamento,
-}) => {
-  const router = useRouter();
+const ConfiguracionDepartamentoTable: FC<Props> = ({ setDepartamento }) => {
+  const { setShowModal } = uiContext();
   const { data, isLoading } = trpc.useQuery(["configuracion.getDepartamentos"]);
 
   if (isLoading || !data) {

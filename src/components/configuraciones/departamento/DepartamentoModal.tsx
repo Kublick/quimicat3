@@ -8,21 +8,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Modal, Text } from "@nextui-org/react";
 import { trpc } from "../../../utils/trpc";
 import { toast } from "react-toastify";
+import { uiContext } from "../../../store/uiSlice";
 
 type Props = {
-  setShowModal: (showModal: boolean) => void;
   mode?: "new" | "edit";
   departamento?: IDepartamento | null;
   setDepartamento: (departamento: IDepartamento | null) => void;
 };
 
 export const DepartamentoModal: FC<Props> = ({
-  setShowModal,
   mode = "new",
   departamento,
   setDepartamento,
 }) => {
   const utils = trpc.useContext();
+  const { setShowModal } = uiContext();
 
   const {
     register,

@@ -1,18 +1,17 @@
 import { PlusCircleIcon } from "@heroicons/react/solid";
 import { Button, Card, Modal } from "@nextui-org/react";
-import router from "next/router";
 import React, { useState } from "react";
 import ConfiguracionDepartamentoTable from "../../../components/configuraciones/departamento/ConfiguracionDepartamentoTable";
 import { DepartamentoModal } from "../../../components/configuraciones/departamento/DepartamentoModal";
 import { UserLayout } from "../../../components/layout";
 import { IDepartamento } from "../../../intefaces/departamento";
+import { uiContext } from "../../../store/uiSlice";
 import { Box } from "../../../styles/TableStyles";
 
 const ConfiguacionesDepartamentoPage = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [departamento, setDepartamento] = useState<IDepartamento | undefined>(
-    undefined
-  );
+  const { showModal, setShowModal } = uiContext();
+
+  const [departamento, setDepartamento] = useState<IDepartamento | null>(null);
 
   return (
     <UserLayout title="Departamento">
@@ -32,10 +31,7 @@ const ConfiguacionesDepartamentoPage = () => {
           Crear Departamento
         </Button>
       </Box>
-      <ConfiguracionDepartamentoTable
-        setShowModal={setShowModal}
-        setDepartamento={setDepartamento}
-      />
+      <ConfiguracionDepartamentoTable setDepartamento={setDepartamento} />
       <Modal
         closeButton
         aria-labelledby="Departamento"
@@ -44,7 +40,6 @@ const ConfiguacionesDepartamentoPage = () => {
       >
         <DepartamentoModal
           setDepartamento={setDepartamento}
-          setShowModal={setShowModal}
           departamento={departamento}
         />
       </Modal>
