@@ -1,7 +1,7 @@
 import { createRouter } from "./context";
 import bcrypt from "bcryptjs";
-import { IUser, userValidation } from "../../intefaces/user";
-import { z, ZodLazy } from "zod";
+import { userValidation } from "../../intefaces";
+import { z } from "zod";
 
 export const userRouter = createRouter()
   .mutation("createUser", {

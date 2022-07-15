@@ -1,4 +1,4 @@
-import { profileValidation } from "../../intefaces/profile";
+import { profileValidation } from "../../intefaces";
 import { createRouter } from "./context";
 
 export const securityRouter = createRouter()

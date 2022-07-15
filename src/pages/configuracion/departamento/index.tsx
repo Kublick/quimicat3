@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import ConfiguracionDepartamentoTable from "../../../components/configuraciones/departamento/ConfiguracionDepartamentoTable";
 import { DepartamentoModal } from "../../../components/configuraciones/departamento/DepartamentoModal";
 import { UserLayout } from "../../../components/layout";
-import { IDepartamento } from "../../../intefaces/departamento";
+import { IDepartamento } from "../../../intefaces";
 import { uiContext } from "../../../store/uiSlice";
 import { Box } from "../../../styles/TableStyles";
 

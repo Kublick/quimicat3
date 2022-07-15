@@ -1,5 +1,4 @@
-import { departamentoValidation } from "../../intefaces/departamento";
-import { metodoValidation } from "../../intefaces/metodo";
+import { metodoValidation, departamentoValidation } from "../../intefaces";
 import { createRouter } from "./context";
 
 export const configuracionRouter = createRouter()

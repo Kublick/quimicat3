@@ -3,15 +3,15 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, Input, Loading, Text } from "@nextui-org/react";
+import { toast } from "react-toastify";
 import { UserLayout } from "../../../components/layout";
-import { IUser, userValidation } from "../../../intefaces/user";
+import { IUser, userValidation } from "../../../intefaces";
 import { SLabel, SSelect } from "../../../styles/SelectStyles";
 import { Box } from "../../../styles/TableStyles";
 import { trpc } from "../../../utils/trpc";
 import { z } from "zod";
 import { GetServerSideProps } from "next";
 import { prisma } from "../../../server/db/client";
-import { toast } from "react-toastify";
 
 const regexValidation = z.string().regex(/^c\w{8}\d+\w{4}\w{8}$/g);
 

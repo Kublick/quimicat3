@@ -2,7 +2,7 @@ import { PencilIcon } from "@heroicons/react/solid";
 import { Loading, Row, Col, Tooltip } from "@nextui-org/react";
 import { ColumnDef } from "@tanstack/react-table";
 import React, { FC } from "react";
-import { IMetodo } from "../../../intefaces/metodo";
+import { IMetodo } from "../../../intefaces";
 import { uiContext } from "../../../store/uiSlice";
 import { trpc } from "../../../utils/trpc";
 import MasterTable from "../../ui/table/MasterTable";

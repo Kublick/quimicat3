@@ -1,12 +1,11 @@
 import React, { FC, useState } from "react";
 import { useForm } from "react-hook-form";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Modal, Text } from "@nextui-org/react";
 import { trpc } from "../../../utils/trpc";
 import { toast } from "react-toastify";
 import { uiContext } from "../../../store/uiSlice";
-import { IMetodo, metodoValidation } from "../../../intefaces/metodo";
+import { IMetodo, metodoValidation } from "../../../intefaces";
 
 type Props = {
   mode?: "new" | "edit";

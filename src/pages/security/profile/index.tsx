@@ -1,7 +1,6 @@
 import { PlusCircleIcon } from "@heroicons/react/solid";
 import { Button } from "@nextui-org/react";
 import router from "next/router";
-import React from "react";
 import { UserLayout } from "../../../components/layout";
 import { SecurityProfileTable } from "../../../components/security/profile/SecurityProfileTable";
 import { Box } from "../../../styles/TableStyles";

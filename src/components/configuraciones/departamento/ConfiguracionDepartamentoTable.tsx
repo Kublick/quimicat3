@@ -3,7 +3,7 @@ import { Col, Loading, Row, Tooltip } from "@nextui-org/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
-import { IDepartamento } from "../../../intefaces/departamento";
+import { IDepartamento } from "../../../intefaces";
 import { uiContext } from "../../../store/uiSlice";
 import { trpc } from "../../../utils/trpc";
 import MasterTable from "../../ui/table/MasterTable";

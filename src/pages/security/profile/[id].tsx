@@ -4,13 +4,12 @@ import { useRouter } from "next/router";
 import React, { FC, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { UserLayout } from "../../../components/layout";
-import { IProfile, profileValidation } from "../../../intefaces/profile";
+import { IProfile, profileValidation } from "../../../intefaces";
 import { Box } from "../../../styles/TableStyles";
 import { ProfileFeature } from "../../../components/security/profile/ProfileFeature";
 import { GetServerSideProps } from "next";
 import { prisma } from "../../../server/db/client";
 import { z } from "zod";
-import { useMutation } from "react-query";
 import { trpc } from "../../../utils/trpc";
 import { toast } from "react-toastify";
 

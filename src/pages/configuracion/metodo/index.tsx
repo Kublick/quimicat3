@@ -1,11 +1,10 @@
 import { PlusCircleIcon } from "@heroicons/react/solid";
 import { Button, Modal } from "@nextui-org/react";
 import React, { useState } from "react";
-import ConfiguracionDepartamentoTable from "../../../components/configuraciones/departamento/ConfiguracionDepartamentoTable";
 import { ConfiguracionMetodoTable } from "../../../components/configuraciones/metodo/ConfiguracionMetodoTable";
 import { MetodoModal } from "../../../components/configuraciones/metodo/MetodoModal";
 import { UserLayout } from "../../../components/layout";
-import { IMetodo } from "../../../intefaces/metodo";
+import { IMetodo } from "../../../intefaces";
 import { uiContext } from "../../../store/uiSlice";
 import { Box } from "../../../styles/TableStyles";
 
