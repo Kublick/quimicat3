@@ -1,4 +1,8 @@
-import { metodoValidation, departamentoValidation } from "../../intefaces";
+import {
+  metodoValidation,
+  departamentoValidation,
+  muestrasValidation,
+} from "../../intefaces";
 import { createRouter } from "./context";
 
 export const configuracionRouter = createRouter()
@@ -49,6 +53,32 @@ export const configuracionRouter = createRouter()
     input: metodoValidation,
     async resolve({ input, ctx }) {
       return await ctx.prisma.metodo.update({
+        where: { id: input.id },
+        data: {
+          ...input,
+        },
+      });
+    },
+  })
+  .query("getMuestras", {
+    async resolve({ ctx }) {
+      return await ctx.prisma.muestra.findMany();
+    },
+  })
+  .mutation("createMuestra", {
+    input: muestrasValidation,
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.muestra.create({
+        data: {
+          ...input,
+        },
+      });
+    },
+  })
+  .mutation("updateMuestra", {
+    input: muestrasValidation,
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.muestra.update({
         where: { id: input.id },
         data: {
           ...input,

@@ -43,12 +43,14 @@ model Departamento {
 }
 
 model Muestra {
-    id            String  @id @default(cuid())
-    clave         String
-    descripcion   String
-    nombreTubo    String
-    barCode       Boolean @default(false)
-    excludeStatus Boolean @default(false)
+    id             String  @id @default(cuid())
+    clave          String
+    descripcion    String
+    nombreTubo     String
+    barCode        Boolean @default(false)
+    excludeStatus  Boolean @default(false)
+    observaciones  String  @default("")
+    startAsPending Boolean @default(false)
 }
 
 model Metodo {

@@ -32,14 +32,14 @@ export const MetodoModal: FC<Props> = ({ mode = "new", metodo, setMetodo }) => {
 
   const [disabled, setDisabled] = useState(false);
 
-  const createDepartamento = trpc.useMutation(["configuracion.createMetodo"], {
+  const createMetodo = trpc.useMutation(["configuracion.createMetodo"], {
     onSuccess: () => {
       //invalidate cache
       utils.invalidateQueries("configuracion.getMetodos");
     },
   });
 
-  const updateDepartamento = trpc.useMutation(["configuracion.updateMetodo"], {
+  const updateMetodo = trpc.useMutation(["configuracion.updateMetodo"], {
     onSuccess: () => {
       //invalidate cache
       utils.invalidateQueries("configuracion.getMetodos");
@@ -55,14 +55,14 @@ export const MetodoModal: FC<Props> = ({ mode = "new", metodo, setMetodo }) => {
     setDisabled(true);
 
     if (mode === "new") {
-      createDepartamento.mutateAsync(data);
-      toast.success("Departamento creado correctamente");
+      createMetodo.mutateAsync(data);
+      toast.success("Metodo creado correctamente");
     }
 
     if (mode === "edit") {
-      updateDepartamento.mutateAsync(data);
+      updateMetodo.mutateAsync(data);
       setMetodo(null);
-      toast.success("Departamento actualizado correctamente");
+      toast.success("Metodo actualizado correctamente");
     }
 
     setShowModal(false);
