@@ -36,10 +36,10 @@ export const pruebaValorRangoValidation = z.object({
 	id: z.string(),
 	sexo: z.string(),
 	unidad: z.string(),
-	edadMaxima: z.number(),
-	edadMinima: z.number(),
-	refMaxima: z.number(),
-	refMinima: z.number(),
+	edadMaxima: z.string(),
+	edadMinima: z.string(),
+	refMaxima: z.string(),
+	refMinima: z.string(),
 });
 
 export type IPruebaValorRango = z.infer<typeof pruebaValorRangoValidation>;

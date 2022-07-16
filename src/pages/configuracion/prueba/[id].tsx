@@ -42,7 +42,7 @@ type NormalidadValues = {
 	refMinima: string;
 }[];
 
-const ConfiguracionPruebaById: FC<Props> = ({ mode, prueba }) => {
+const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 	const router = useRouter();
 
 	const { data: departamentos } = trpc.useQuery([
@@ -50,6 +50,8 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode, prueba }) => {
 	]);
 	const { data: metodos } = trpc.useQuery(['configuracion.getMetodos']);
 	const { data: muestras } = trpc.useQuery(['configuracion.getMuestras']);
+
+	const createPrueba = trpc.useMutation(['configuracion.createPrueba']);
 
 	const [disabled, setDisabled] = useState(true);
 	const [valorRango, setValorRango] = useState<NormalidadValues>([]);
@@ -97,6 +99,17 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode, prueba }) => {
 	});
 
 	const onSubmit = async (data: IPrueba) => {
+		setDisabled(true);
+
+		const mergeData = {
+			...data,
+			valoresRangos: valorRango,
+		};
+
+		if (mode === 'new') {
+			createPrueba.mutateAsync(data);
+		}
+
 		console.log(data);
 	};
 
@@ -138,6 +151,8 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode, prueba }) => {
 			textMode = 'Registrar Prueba';
 			break;
 	}
+
+	console.log(errors);
 
 	return (
 		<UserLayout title="Pruebas">
@@ -457,12 +472,12 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode, prueba }) => {
 
 					{valorRango.length > 0 ? (
 						<PruebaNormalidadTable
-						// rows={valorRango}
-						// visible={visible}
-						// setVisible={setVisible}
-						// setValorRango={setValorRango}
-						// editValorRango={editValorRango}
-						// setEditValorRango={setEditValorRango}
+							rows={valorRango}
+							visible={visible}
+							setVisible={setVisible}
+							setValorRango={setValorRango}
+							editValorRango={editValorRango}
+							setEditValorRango={setEditValorRango}
 						/>
 					) : null}
 
@@ -482,7 +497,7 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode, prueba }) => {
 						>
 							Regresar
 						</Button>
-						<Button type="submit" css={{ mt: 24 }} disabled={disabled}>
+						<Button type="submit" css={{ mt: 24 }}>
 							Guardar
 						</Button>
 					</Box>

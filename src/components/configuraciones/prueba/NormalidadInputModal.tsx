@@ -15,7 +15,7 @@ type Props = {
 	setValorRango: (valorRango: []) => void;
 	editValorRango?: any;
 	setEditValorRango: (editValorRango: any) => void;
-	valorRango: any[];
+	valorRango: IPruebaValorRango[];
 };
 
 export const NormalidadInputModal: FC<Props> = ({
@@ -37,10 +37,10 @@ export const NormalidadInputModal: FC<Props> = ({
 			id: '',
 			sexo: '',
 			unidad: '',
-			edadMinima: 0,
-			edadMaxima: 0,
-			refMaxima: 0,
-			refMinima: 0,
+			edadMinima: '',
+			edadMaxima: '',
+			refMaxima: '',
+			refMinima: '',
 		},
 		mode: 'onBlur',
 		resolver: zodResolver(pruebaValorRangoValidation),
@@ -66,8 +66,6 @@ export const NormalidadInputModal: FC<Props> = ({
 
 	const onSubmit = (data: IPruebaValorRango) => {
 		setError('');
-
-		console.log('test', !!valorRango.find((x) => x.id === data.sexo));
 
 		if (valorRango.length > 0) {
 			if (!!valorRango.find((x) => x.id === data.sexo)) {
