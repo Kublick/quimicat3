@@ -38,22 +38,60 @@ model Profile {
 }
 
 model Departamento {
-    id     String @id @default(cuid())
+    id     String   @id @default(cuid())
     nombre String
+    Prueba Prueba[]
 }
 
 model Muestra {
-    id             String  @id @default(cuid())
+    id             String   @id @default(cuid())
     clave          String
     descripcion    String
     nombreTubo     String
-    barCode        Boolean @default(false)
-    excludeStatus  Boolean @default(false)
-    observaciones  String  @default("")
-    startAsPending Boolean @default(false)
+    barCode        Boolean  @default(false)
+    excludeStatus  Boolean  @default(false)
+    observaciones  String   @default("")
+    startAsPending Boolean  @default(false)
+    Prueba         Prueba[]
 }
 
 model Metodo {
-    id     String @id @default(cuid())
+    id     String   @id @default(cuid())
     nombre String
+    Prueba Prueba[]
+}
+
+model Prueba {
+    id                   String       @id @default(cuid())
+    codigo               String
+    abreviatura          String
+    descripcion          String
+    titulo               String
+    hojaTrabajo          String
+    departamento         Departamento @relation(fields: [departamentoId], references: [id])
+    departamentoId       String
+    muestra              Muestra      @relation(fields: [muestraId], references: [id])
+    muestraId            String
+    metodoId             String
+    metodo               Metodo       @relation(fields: [metodoId], references: [id])
+    printMetodo          String
+    formula              String
+    printBold            String
+    unidades             String
+    sexo                 String
+    tipoResultado        String
+    resultadoDefault     String
+    valorTipo            String
+    decimales            Int
+    indicaciones         String
+    notas                String
+    printNotas           String
+    notasInternas        String
+    tipoValorNormalidad  String
+    valorNormalidadTexto String
+    valoresRangos        String[]
+    ventaIndividual      Boolean
+    permitirAntibiograma Boolean
+
+
 }
