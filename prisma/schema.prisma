@@ -74,9 +74,9 @@ model Prueba {
     muestraId            String
     metodoId             String
     metodo               Metodo       @relation(fields: [metodoId], references: [id])
-    printMetodo          String
+    printMetodo          Boolean      @default(false)
     formula              String
-    printBold            String
+    printBold            Boolean      @default(false)
     unidades             String
     sexo                 String
     tipoResultado        String
@@ -85,13 +85,18 @@ model Prueba {
     decimales            Int
     indicaciones         String
     notas                String
-    printNotas           String
+    printNotas           Boolean      @default(false)
     notasInternas        String
     tipoValorNormalidad  String
     valorNormalidadTexto String
     valoresRangos        String[]
-    ventaIndividual      Boolean
-    permitirAntibiograma Boolean
+    ventaIndividual      Boolean      @default(false)
+    permitirAntibiograma Boolean      @default(false)
+}
 
-
+model Tarifa {
+    id          String  @id @default(cuid())
+    nombre      String
+    descripcion String
+    isDefault   Boolean @default(false)
 }

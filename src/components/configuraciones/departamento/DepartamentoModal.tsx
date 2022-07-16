@@ -1,6 +1,5 @@
 import React, { FC, useState } from "react";
 import { useForm } from "react-hook-form";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Modal, Text } from "@nextui-org/react";
 import { trpc } from "../../../utils/trpc";

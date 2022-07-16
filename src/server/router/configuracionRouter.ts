@@ -2,6 +2,7 @@ import {
   metodoValidation,
   departamentoValidation,
   muestrasValidation,
+  pruebaValidation,
 } from "../../intefaces";
 import { createRouter } from "./context";
 
@@ -77,6 +78,32 @@ export const configuracionRouter = createRouter()
   })
   .mutation("updateMuestra", {
     input: muestrasValidation,
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.muestra.update({
+        where: { id: input.id },
+        data: {
+          ...input,
+        },
+      });
+    },
+  })
+  .query("getPruebas", {
+    async resolve({ ctx }) {
+      return await ctx.prisma.prueba.findMany();
+    },
+  })
+  .mutation("createPrueba", {
+    input: pruebaValidation,
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.prueba.create({
+        data: {
+          ...input,
+        },
+      });
+    },
+  })
+  .mutation("updatePrueba", {
+    input: pruebaValidation,
     async resolve({ input, ctx }) {
       return await ctx.prisma.muestra.update({
         where: { id: input.id },
