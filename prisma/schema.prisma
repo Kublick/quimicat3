@@ -1,102 +1,99 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id         String    @id @default(cuid())
-    name       String?
-    password   String
-    username   String?   @unique
-    role       String?   @default("usuario")
-    image      String?
-    Sucursal   Sucursal? @relation(fields: [sucursalId], references: [id])
-    sucursalId String?
-    Profile    Profile?  @relation(fields: [profileId], references: [id])
-    profileId  String?
-    status     String?   @default("activo")
+  id         String    @id @default(cuid())
+  name       String?
+  password   String
+  image      String?
+  role       String?   @default("usuario")
+  profileId  String?
+  sucursalId String?
+  username   String?   @unique
+  status     String?   @default("activo")
+  Profile    Profile?  @relation(fields: [profileId], references: [id])
+  Sucursal   Sucursal? @relation(fields: [sucursalId], references: [id])
 }
 
 model Sucursal {
-    id     String @id @default(cuid())
-    nombre String
-    User   User[]
+  id     String @id @default(cuid())
+  nombre String
+  User   User[]
 }
 
 model Profile {
-    id              String @id @default(cuid())
-    nombre          String
-    enabledFeatures Json
-    User            User[]
+  id              String @id @default(cuid())
+  nombre          String
+  enabledFeatures Json
+  User            User[]
 }
 
 model Departamento {
-    id     String   @id @default(cuid())
-    nombre String
-    Prueba Prueba[]
+  id     String   @id @default(cuid())
+  nombre String
+  Prueba Prueba[]
 }
 
 model Muestra {
-    id             String   @id @default(cuid())
-    clave          String
-    descripcion    String
-    nombreTubo     String
-    barCode        Boolean  @default(false)
-    excludeStatus  Boolean  @default(false)
-    observaciones  String   @default("")
-    startAsPending Boolean  @default(false)
-    Prueba         Prueba[]
+  id             String   @id @default(cuid())
+  clave          String
+  descripcion    String
+  nombreTubo     String
+  barCode        Boolean  @default(false)
+  excludeStatus  Boolean  @default(false)
+  observaciones  String   @default("")
+  startAsPending Boolean  @default(false)
+  Prueba         Prueba[]
 }
 
 model Metodo {
-    id     String   @id @default(cuid())
-    nombre String
-    Prueba Prueba[]
+  id     String   @id @default(cuid())
+  nombre String
+  Prueba Prueba[]
 }
 
 model Prueba {
-    id                   String       @id @default(cuid())
-    codigo               String
-    abreviatura          String
-    descripcion          String
-    titulo               String
-    hojaTrabajo          String
-    departamento         Departamento @relation(fields: [departamentoId], references: [id])
-    departamentoId       String
-    muestra              Muestra      @relation(fields: [muestraId], references: [id])
-    muestraId            String
-    metodoId             String
-    metodo               Metodo       @relation(fields: [metodoId], references: [id])
-    printMetodo          Boolean      @default(false)
-    formula              String
-    printBold            Boolean      @default(false)
-    unidades             String
-    sexo                 String
-    tipoResultado        String
-    resultadoDefault     String
-    valorTipo            String
-    decimales            Int
-    indicaciones         String
-    notas                String
-    printNotas           Boolean      @default(false)
-    notasInternas        String
-    tipoValorNormalidad  String
-    valorNormalidadTexto String
-    valoresRangos        String[]
-    ventaIndividual      Boolean      @default(false)
-    permitirAntibiograma Boolean      @default(false)
+  id                   String       @id @default(cuid())
+  codigo               String
+  abreviatura          String
+  descripcion          String
+  titulo               String
+  hojaTrabajo          String
+  formula              String
+  unidades             String
+  sexo                 String
+  tipoResultado        String
+  resultadoDefault     String
+  valorTipo            String
+  decimales            Int
+  indicaciones         String
+  notas                String
+  notasInternas        String
+  tipoValorNormalidad  String
+  valorNormalidadTexto String
+  valoresRangos        String[]
+  ventaIndividual      Boolean      @default(false)
+  permitirAntibiograma Boolean      @default(false)
+  departamentoId       String
+  metodoId             String
+  muestraId            String
+  printMetodo          String
+  printBold            String
+  printNotas           String
+  departamento         Departamento @relation(fields: [departamentoId], references: [id])
+  metodo               Metodo       @relation(fields: [metodoId], references: [id])
+  muestra              Muestra      @relation(fields: [muestraId], references: [id])
 }
 
 model Tarifa {
-    id          String  @id @default(cuid())
-    nombre      String
-    descripcion String
-    isDefault   Boolean @default(false)
+  id          String  @id @default(cuid())
+  nombre      String
+  descripcion String
+  isDefault   Boolean @default(false)
 }
