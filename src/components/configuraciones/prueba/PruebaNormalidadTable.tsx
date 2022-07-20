@@ -85,7 +85,6 @@ const PruebaNormalidadTable: FC<Props> = ({
 
 	const handleEditItem = (item: any) => {
 		setEditValorRango(item);
-
 		setVisible(true);
 	};
 

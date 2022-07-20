@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal, Input, Button, Text } from '@nextui-org/react';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
 	pruebaValorRangoValidation,
@@ -34,7 +34,7 @@ export const NormalidadInputModal: FC<Props> = ({
 		reset,
 	} = useForm<IPruebaValorRango>({
 		defaultValues: {
-			id: '',
+			idinternal: '',
 			sexo: '',
 			unidad: '',
 			edadMinima: '',
@@ -46,17 +46,17 @@ export const NormalidadInputModal: FC<Props> = ({
 		resolver: zodResolver(pruebaValorRangoValidation),
 	});
 
-	// useEffect(() => {
-	// 	reset({
-	// 		id: editValorRango.id,
-	// 		sexo: editValorRango.sexo,
-	// 		unidad: editValorRango.unidad,
-	// 		edadMinima: editValorRango.edadMinima,
-	// 		edadMaxima: editValorRango.edadMaxima,
-	// 		refMaxima: editValorRango.refMaxima,
-	// 		refMinima: editValorRango.refMinima,
-	// 	});
-	// }, [reset, editValorRango]);
+	useEffect(() => {
+		reset({
+			id: editValorRango.id,
+			sexo: editValorRango.sexo,
+			unidad: editValorRango.unidad,
+			edadMinima: editValorRango.edadMinima,
+			edadMaxima: editValorRango.edadMaxima,
+			refMaxima: editValorRango.refMaxima,
+			refMinima: editValorRango.refMinima,
+		});
+	}, [reset, editValorRango]);
 
 	const closeHandler = () => {
 		setError('');
@@ -64,17 +64,19 @@ export const NormalidadInputModal: FC<Props> = ({
 		reset();
 	};
 
+	console.log(errors);
+
 	const onSubmit = (data: IPruebaValorRango) => {
 		setError('');
-
 		if (valorRango.length > 0) {
-			if (!!valorRango.find((x) => x.id === data.sexo)) {
+			if (!!valorRango.find((x) => x.idinternal === data.sexo)) {
 				setError('Parametro ya existe en la lista');
 				return;
 			}
 		}
-
+		data.idinternal = data.sexo;
 		data.id = data.sexo;
+
 		let tableArray = [...(valorRango as []), data];
 		setValorRango(tableArray as []);
 		reset();
@@ -119,7 +121,7 @@ export const NormalidadInputModal: FC<Props> = ({
 							{errors.sexo && <ErrorText>{errors.sexo.message}</ErrorText>}
 						</Box>
 						<Box>
-							<SLabel css={{ ml: '6px' }}>Sexo</SLabel>
+							<SLabel css={{ ml: '6px' }}>Unidad</SLabel>
 							<SSelect {...register('unidad')}>
 								<option value="">Seleccione una opción</option>
 								<option value="1">1 (Años)</option>

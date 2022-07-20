@@ -7,7 +7,7 @@ export const pruebaValidation = z.object({
 	descripcion: z.string().min(3, { message: 'Minimo 3 caracteres' }),
 	titulo: z.string(),
 	hojaTrabajo: z.string(),
-	departamentoId: z.string(),
+	departamentoId: z.string().min(1),
 	muestraId: z.string(),
 	metodoId: z.string(),
 	printMetodo: z.string(),
@@ -25,7 +25,18 @@ export const pruebaValidation = z.object({
 	notasInternas: z.string(),
 	tipoValorNormalidad: z.string(),
 	valorNormalidadTexto: z.string(),
-	valoresRangos: z.array(z.string()),
+	valoresRangos: z.array(
+		z.object({
+			id: z.string(),
+			idinternal: z.string(),
+			sexo: z.string(),
+			unidad: z.string(),
+			edadMaxima: z.string(),
+			edadMinima: z.string(),
+			refMaxima: z.string(),
+			refMinima: z.string(),
+		}),
+	),
 	ventaIndividual: z.boolean(),
 	permitirAntibiograma: z.boolean(),
 });
@@ -33,7 +44,8 @@ export const pruebaValidation = z.object({
 export type IPrueba = z.infer<typeof pruebaValidation>;
 
 export const pruebaValorRangoValidation = z.object({
-	id: z.string(),
+	id: z.string().optional(),
+	idinternal: z.string(),
 	sexo: z.string(),
 	unidad: z.string(),
 	edadMaxima: z.string(),

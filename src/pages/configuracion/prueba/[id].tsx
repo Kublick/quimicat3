@@ -15,7 +15,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { NormalidadInputModal } from '../../../components/configuraciones/prueba/NormalidadInputModal';
 import PruebaNormalidadTable from '../../../components/configuraciones/prueba/PruebaNormalidadTable';
 import { UserLayout } from '../../../components/layout';
-import { IPrueba, pruebaValidation } from '../../../intefaces';
+import {
+	IPrueba,
+	pruebaValidation,
+	IPruebaValorRango,
+} from '../../../intefaces';
 import { SLabel, SSelect } from '../../../styles/SelectStyles';
 import { Box, ErrorText } from '../../../styles/TableStyles';
 import { trpc } from '../../../utils/trpc';
@@ -34,6 +38,7 @@ const parameters = [
 
 type NormalidadValues = {
 	id: string;
+	idinternal: string;
 	sexo: string;
 	unidad: string;
 	edadMinima: string;
@@ -52,8 +57,9 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 	const { data: muestras } = trpc.useQuery(['configuracion.getMuestras']);
 
 	const createPrueba = trpc.useMutation(['configuracion.createPrueba']);
+	const updatePrueba = trpc.useMutation(['configuracion.updatePrueba']);
 
-	const [disabled, setDisabled] = useState(true);
+	const [disabled, setDisabled] = useState(false);
 	const [valorRango, setValorRango] = useState<NormalidadValues>([]);
 	const [editValorRango, setEditValorRango] = useState<NormalidadValues>([]);
 	const [normalidad, setNormalidad] = useState('');
@@ -82,7 +88,7 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 			sexo: '',
 			tipoResultado: '',
 			resultadoDefault: '',
-			valorTipo: '0',
+			valorTipo: '',
 			decimales: 0,
 			indicaciones: '',
 			notas: '',
@@ -98,19 +104,27 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 		resolver: zodResolver(pruebaValidation),
 	});
 
+	if (prueba) {
+	}
+
 	const onSubmit = async (data: IPrueba) => {
 		setDisabled(true);
 
-		const mergeData = {
-			...data,
-			valoresRangos: valorRango,
-		};
+		let newData = { ...data, valoresRangos: [...valorRango] };
 
 		if (mode === 'new') {
-			createPrueba.mutateAsync(data);
+			createPrueba.mutateAsync(newData);
 		}
 
-		console.log(data);
+		if (mode === 'edit') {
+			updatePrueba.mutateAsync(newData);
+		}
+
+		setTimeout(() => {
+			setDisabled(false);
+			reset();
+			router.push('/configuracion/pruebas');
+		}, 2000);
 	};
 
 	if (!departamentos || !metodos || !muestras) {
@@ -497,7 +511,7 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 						>
 							Regresar
 						</Button>
-						<Button type="submit" css={{ mt: 24 }}>
+						<Button type="submit" css={{ mt: 24 }} disabled={disabled}>
 							Guardar
 						</Button>
 					</Box>
