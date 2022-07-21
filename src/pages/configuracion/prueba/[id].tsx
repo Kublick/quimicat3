@@ -10,7 +10,7 @@ import {
   Checkbox,
 } from "@nextui-org/react";
 import { GetServerSideProps } from "next";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import React, { FC, useState, ChangeEvent, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { NormalidadInputModal } from "../../../components/configuraciones/prueba/NormalidadInputModal";
@@ -34,8 +34,6 @@ type Props = {
 
 const regexValidation = z.string().regex(/^c\w{8}\d+\w{4}\w{8}$/g);
 
-type PartialPrueba = Pick<IPrueba, "valoresRangos">;
-
 const parameters = [
   { id: 1, parameter: "No" },
   { id: 2, parameter: "Si, Solo con venta individual" },
@@ -43,7 +41,7 @@ const parameters = [
   { id: 4, parameter: "Si, Siempre" },
 ];
 
-const ConfiguracionPruebaById: FC<Props> = ({ mode = "new", prueba = [] }) => {
+const ConfiguracionPruebaById: FC<Props> = ({ mode = "new", prueba }) => {
   const router = useRouter();
 
   const { data: departamentos } = trpc.useQuery([
@@ -55,11 +53,13 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = "new", prueba = [] }) => {
   const createPrueba = trpc.useMutation(["configuracion.createPrueba"]);
   const updatePrueba = trpc.useMutation(["configuracion.updatePrueba"]);
 
-  console.log(prueba);
-
   const [disabled, setDisabled] = useState(false);
-  const [valorRango, setValorRango] = useState([...prueba.valoresRangos] || []);
-  const [editValorRango, setEditValorRango] = useState<IPruebaValorRango[]>([]);
+  const [valorRango, setValorRango] = useState<IPruebaValorRango[]>(
+    [...prueba.valoresRangos] || []
+  );
+  const [editValorRango, setEditValorRango] = useState<IPruebaValorRango[]>(
+    [...prueba.valoresRangos] || []
+  );
   const [normalidad, setNormalidad] = useState("");
   const [visible, setVisible] = useState(false);
 
@@ -108,31 +108,22 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = "new", prueba = [] }) => {
     }
   }, [prueba, reset, mode]);
 
-  console.log(errors);
-
   const onSubmit = async (data: IPrueba) => {
     setDisabled(true);
-
-    let newData = { ...data, valoresRangos: [] };
-
+    let newData: IPrueba = { ...data, valoresRangos: [] };
     if (valorRango) {
-      newData = { ...data, valoresRangos: [...valorRango] as any };
+      newData = { ...data, valoresRangos: [...valorRango] };
     }
-
-    console.log(newData);
-
     if (mode === "new") {
       createPrueba.mutateAsync(newData);
     }
-
     if (mode === "edit") {
       updatePrueba.mutateAsync(newData);
     }
-
     setTimeout(() => {
       setDisabled(false);
-      //   reset();
-      //   router.push("/configuracion/prueba");
+      reset();
+      router.push("/configuracion/prueba");
     }, 2000);
   };
 
@@ -343,7 +334,7 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = "new", prueba = [] }) => {
                     render={({ field: { value, onChange } }) => (
                       <Checkbox
                         label="¿Permitir Venta Individual?"
-                        isSelected={true}
+                        isSelected={value}
                         onChange={onChange}
                       />
                     )}

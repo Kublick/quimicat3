@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, Input, Button, Text } from "@nextui-org/react";
 import React, { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { array } from "zod";
 import {
   pruebaValorRangoValidation,
   IPruebaValorRango,
@@ -64,14 +65,30 @@ export const NormalidadInputModal: FC<Props> = ({
     reset();
   };
 
-  console.log("editValorRango", editValorRango);
-
   const onSubmit = (data: IPruebaValorRango) => {
     setError("");
 
-    console.log("editValorRango", editValorRango);
+    console.log(data);
 
-    if (valorRango.length > 0) {
+    if (editValorRango) {
+      const newValorRango = valorRango.filter(
+        (valorRango) => valorRango.id !== editValorRango.id
+      );
+      const mapid = newValorRango
+        .map((valorRango) => valorRango.id)
+        .includes(data.sexo);
+      if (mapid) {
+        setError("Parametro ya existe en la lista");
+        return;
+      }
+      const update = [...newValorRango, data];
+      setValorRango(update as any);
+      reset();
+      setVisible(false);
+      return;
+    }
+
+    if (valorRango.length > 0 && !editValorRango) {
       if (!!valorRango.find((x) => x.id === data.sexo)) {
         setError("Parametro ya existe en la lista");
         return;
@@ -79,6 +96,7 @@ export const NormalidadInputModal: FC<Props> = ({
     }
     data.id = data.sexo;
     let tableArray = [...(valorRango as []), data];
+
     setValorRango(tableArray as []);
     reset();
     setVisible(false);
