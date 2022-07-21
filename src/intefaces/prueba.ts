@@ -25,33 +25,21 @@ export const pruebaValidation = z.object({
 	notasInternas: z.string(),
 	tipoValorNormalidad: z.string(),
 	valorNormalidadTexto: z.string(),
-	valoresRangos: z.array(
-		z.object({
-			id: z.string(),
-			idinternal: z.string(),
-			sexo: z.string(),
-			unidad: z.string(),
-			edadMaxima: z.string(),
-			edadMinima: z.string(),
-			refMaxima: z.string(),
-			refMinima: z.string(),
-		}),
-	),
-	ventaIndividual: z.boolean(),
-	permitirAntibiograma: z.boolean(),
+	valoresRangos: z.object().optional(),
+	ventaIndividual: z.boolean().optional(),
+	permitirAntibiograma: z.boolean().optional(),
 });
 
 export type IPrueba = z.infer<typeof pruebaValidation>;
 
 export const pruebaValorRangoValidation = z.object({
 	id: z.string().optional(),
-	idinternal: z.string(),
 	sexo: z.string(),
 	unidad: z.string(),
-	edadMaxima: z.string(),
-	edadMinima: z.string(),
-	refMaxima: z.string(),
-	refMinima: z.string(),
+	edadMaxima: z.number(),
+	edadMinima: z.number(),
+	refMaxima: z.number(),
+	refMinima: z.number(),
 });
 
 export type IPruebaValorRango = z.infer<typeof pruebaValorRangoValidation>;

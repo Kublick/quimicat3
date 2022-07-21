@@ -88,7 +88,7 @@ model Prueba {
   metodoId             String
   muestra              Muestra      @relation(fields: [muestraId], references: [id])
   muestraId            String
-  valoresRangos        Json
+  valoresRangos        Json?
 }
 
 model Tarifa {
@@ -97,3 +97,4 @@ model Tarifa {
   descripcion String
   isDefault   Boolean @default(false)
 }
+

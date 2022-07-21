@@ -186,7 +186,7 @@ const SecurityProfileById: FC<Props> = ({ profile, mode }) => {
             <Button
               type="submit"
               css={{ mt: 24 }}
-              //   disabled={mode === "view" || disabled}
+                disabled={disabled}
             >
               Guardar
             </Button>

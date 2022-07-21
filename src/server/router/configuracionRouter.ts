@@ -89,22 +89,16 @@ export const configuracionRouter = createRouter()
 	})
 	.query('getPruebas', {
 		async resolve({ ctx }) {
-			return await ctx.prisma.prueba.findMany();
+			return await ctx.prisma.prueba.findMany({
+				include: {
+					departamento: true,
+				},
+			});
 		},
 	})
 	.mutation('createPrueba', {
 		input: pruebaValidation,
 		async resolve({ input, ctx }) {
-			const data = {
-				id: 'indistinto',
-				gender: 'indistinto',
-				unidad: '1',
-				edadMinima: 1,
-				edadMaxima: 1,
-				refMinima: 1,
-				refMaxima: 1,
-			};
-
 			return await ctx.prisma.prueba.create({
 				data: {
 					...input,
@@ -115,10 +109,23 @@ export const configuracionRouter = createRouter()
 	.mutation('updatePrueba', {
 		input: pruebaValidation,
 		async resolve({ input, ctx }) {
-			return await ctx.prisma.muestra.update({
+			console.log('manda input', input);
+
+			let valorRango = {
+				id: 'indistinto',
+				sexo: 'indistinto',
+				unidad: '1',
+				edadMaxima: 1,
+				edadMinima: 100,
+				refMaxima: 2,
+				refMinima: 200,
+			};
+
+			return await ctx.prisma.prueba.update({
 				where: { id: input.id },
 				data: {
 					...input,
+					valoresRangos: valorRango,
 				},
 			});
 		},

@@ -46,7 +46,11 @@ export const NormalidadInputModal: FC<Props> = ({
 		resolver: zodResolver(pruebaValorRangoValidation),
 	});
 
+	
+	
+
 	useEffect(() => {
+
 		reset({
 			id: editValorRango.id,
 			sexo: editValorRango.sexo,
@@ -56,6 +60,10 @@ export const NormalidadInputModal: FC<Props> = ({
 			refMaxima: editValorRango.refMaxima,
 			refMinima: editValorRango.refMinima,
 		});
+
+	
+		
+
 	}, [reset, editValorRango]);
 
 	const closeHandler = () => {
@@ -63,8 +71,6 @@ export const NormalidadInputModal: FC<Props> = ({
 		setVisible(false);
 		reset();
 	};
-
-	console.log(errors);
 
 	const onSubmit = (data: IPruebaValorRango) => {
 		setError('');
@@ -74,9 +80,7 @@ export const NormalidadInputModal: FC<Props> = ({
 				return;
 			}
 		}
-		data.idinternal = data.sexo;
 		data.id = data.sexo;
-
 		let tableArray = [...(valorRango as []), data];
 		setValorRango(tableArray as []);
 		reset();
@@ -132,7 +136,7 @@ export const NormalidadInputModal: FC<Props> = ({
 						<Input
 							bordered
 							label="Edad Minima"
-							{...register('edadMinima')}
+							{...register('edadMinima', {valueAsNumber: true})}
 							helperText={errors?.edadMinima?.message}
 							helperColor="error"
 							color="primary"
@@ -140,7 +144,7 @@ export const NormalidadInputModal: FC<Props> = ({
 						<Input
 							bordered
 							label="Edad Maxima"
-							{...register('edadMaxima')}
+							{...register('edadMaxima', {valueAsNumber: true})}
 							helperText={errors?.edadMaxima?.message}
 							helperColor="error"
 							color="primary"
@@ -149,7 +153,7 @@ export const NormalidadInputModal: FC<Props> = ({
 						<Input
 							bordered
 							label="Ref. Minima"
-							{...register('refMinima')}
+							{...register('refMinima', {valueAsNumber: true})}
 							helperText={errors?.refMinima?.message}
 							helperColor="error"
 							color="primary"
@@ -157,7 +161,7 @@ export const NormalidadInputModal: FC<Props> = ({
 						<Input
 							bordered
 							label="Ref. Maxima"
-							{...register('refMaxima')}
+							{...register('refMaxima', {valueAsNumber: true})}
 							helperText={errors?.refMaxima?.message}
 							helperColor="error"
 							color="primary"

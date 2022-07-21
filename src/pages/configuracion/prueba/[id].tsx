@@ -9,8 +9,9 @@ import {
 	Loading,
 	Checkbox,
 } from '@nextui-org/react';
+import { GetServerSideProps } from 'next';
 import router, { useRouter } from 'next/router';
-import React, { FC, useState, ChangeEvent } from 'react';
+import React, { FC, useState, ChangeEvent, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { NormalidadInputModal } from '../../../components/configuraciones/prueba/NormalidadInputModal';
 import PruebaNormalidadTable from '../../../components/configuraciones/prueba/PruebaNormalidadTable';
@@ -23,11 +24,16 @@ import {
 import { SLabel, SSelect } from '../../../styles/SelectStyles';
 import { Box, ErrorText } from '../../../styles/TableStyles';
 import { trpc } from '../../../utils/trpc';
+import { prisma } from "../../../server/db/client";
+import {z} from 'zod'
+
 
 type Props = {
 	mode: string;
 	prueba: IPrueba;
 };
+
+const regexValidation = z.string().regex(/^c\w{8}\d+\w{4}\w{8}$/g);
 
 const parameters = [
 	{ id: 1, parameter: 'No' },
@@ -47,7 +53,7 @@ type NormalidadValues = {
 	refMinima: string;
 }[];
 
-const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
+const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba = [] }) => {
 	const router = useRouter();
 
 	const { data: departamentos } = trpc.useQuery([
@@ -99,18 +105,36 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 			valoresRangos: [],
 			ventaIndividual: false,
 			permitirAntibiograma: false,
+			decimales: 0
 		},
 		mode: 'onBlur',
 		resolver: zodResolver(pruebaValidation),
 	});
 
-	if (prueba) {
-	}
+	useEffect(() => {
+		
+			if (prueba) {
+				reset({...prueba})
+				console.log(prueba.valoresRangos)
+				if (prueba.valoresRangos) {
+					setValorRango([prueba.valoresRangos] as any);
+				}
+			}
+		
+	}, [])
+	
+	console.log(errors)
 
 	const onSubmit = async (data: IPrueba) => {
 		setDisabled(true);
 
-		let newData = { ...data, valoresRangos: [...valorRango] };
+		let newData = {...data, valoresRangos: {}}
+
+	
+
+			// if(valorRango) {
+			// 	newData = { ...data, valoresRangos: [...valorRango] };
+			// }
 
 		if (mode === 'new') {
 			createPrueba.mutateAsync(newData);
@@ -123,7 +147,7 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 		setTimeout(() => {
 			setDisabled(false);
 			reset();
-			router.push('/configuracion/pruebas');
+			router.push('/configuracion/prueba');
 		}, 2000);
 	};
 
@@ -334,7 +358,7 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 										render={({ field: { value, onChange } }) => (
 											<Checkbox
 												label="¿Permitir Venta Individual?"
-												isSelected={value}
+												isSelected={true}
 												onChange={onChange}
 											/>
 										)}
@@ -403,7 +427,7 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 									</Box>
 									<Box>
 										<SLabel css={{ ml: '6px' }}>Decimales</SLabel>
-										<SSelect {...register('valorTipo')}>
+										<SSelect {...register('decimales', {valueAsNumber: true})}>
 											<option value="0">0</option>
 											<option value="1">1</option>
 											<option value="2">2</option>
@@ -507,7 +531,7 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 							type="submit"
 							css={{ mt: 24 }}
 							color="secondary"
-							onClick={() => router.push('/configuracion/pruebas')}
+							onClick={() => router.push('/configuracion/prueba')}
 						>
 							Regresar
 						</Button>
@@ -526,8 +550,47 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 				editValorRango={editValorRango}
 				setEditValorRango={setEditValorRango}
 			/>
+			  
+			
 		</UserLayout>
 	);
 };
 
 export default ConfiguracionPruebaById;
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { id, view } = query;
+
+  if (regexValidation.safeParse(id).success === true) {
+    const prueba = await prisma.prueba.findFirst({
+      where: {
+        id: id as string,
+      },
+    });
+
+		console.log(prueba)
+
+    return {
+      props: {
+        prueba,
+        mode: "edit",
+      },
+    };
+  }
+
+  if (view === "new") {
+    return {
+      props: {
+        mode: "new",
+	
+      },
+    };
+  }
+
+  return {
+    props: {},
+    redirect: {
+      destination: "/",
+    },
+  };
+};
