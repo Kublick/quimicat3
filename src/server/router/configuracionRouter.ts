@@ -3,6 +3,7 @@ import {
   departamentoValidation,
   muestrasValidation,
   pruebaValidation,
+  tarifaValidation,
 } from "../../intefaces";
 import { createRouter } from "./context";
 
@@ -112,6 +113,32 @@ export const configuracionRouter = createRouter()
       console.log("manda input", input);
 
       return await ctx.prisma.prueba.update({
+        where: { id: input.id },
+        data: {
+          ...input,
+        },
+      });
+    },
+  })
+  .query("getTarifas", {
+    async resolve({ ctx }) {
+      return await ctx.prisma.tarifa.findMany();
+    },
+  })
+  .mutation("createTarifa", {
+    input: tarifaValidation,
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.tarifa.create({
+        data: {
+          ...input,
+        },
+      });
+    },
+  })
+  .mutation("updateTarifa", {
+    input: tarifaValidation,
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.tarifa.update({
         where: { id: input.id },
         data: {
           ...input,
