@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Modal, Text } from "@nextui-org/react";
@@ -46,8 +46,11 @@ export const MetodoModal: FC<Props> = ({ mode = "new", metodo, setMetodo }) => {
     },
   });
 
-  if (metodo) {
+  useEffect(() => {
     reset({ ...metodo });
+  }, [reset, metodo]);
+
+  if (metodo) {
     mode = "edit";
   }
 
