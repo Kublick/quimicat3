@@ -106,7 +106,7 @@ const TarifaModal: FC<Props> = ({ mode = "new", tarifa, setTarifa }) => {
             label="Descripcion"
             {...register("descripcion")}
             color="primary"
-            helperText={errors?.nombre?.message}
+            helperText={errors?.descripcion?.message}
             helperColor="error"
           />
           <Controller

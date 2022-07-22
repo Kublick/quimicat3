@@ -97,3 +97,11 @@ model Tarifa {
   descripcion String
   isDefault   Boolean @default(false)
 }
+
+model Medico {
+  id           String @id @default(cuid())
+  nombre       String
+  especialidad String
+  telefono     String
+  email        String
+}

@@ -5,3 +5,4 @@ export * from "./departamento";
 export * from "./muestras";
 export * from "./prueba";
 export * from "./tarifa";
+export * from "./medico";
