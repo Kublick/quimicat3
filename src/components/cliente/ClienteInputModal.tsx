@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { clienteValidation, ICliente } from "../../intefaces";
 import { uiContext } from "../../store/uiSlice";
 import { SLabel, SSelect } from "../../styles/SelectStyles";
+import { Box } from "../../styles/TableStyles";
 import { trpc } from "../../utils/trpc";
 
 type Props = {
@@ -178,12 +179,13 @@ export const ClienteInputModal: FC<Props> = ({
             helperText={errors?.telefono?.message}
             helperColor="error"
           />
-
-          <SLabel>Tipo</SLabel>
-          <SSelect {...register("tipo")}>
-            <option value="credito">Crédito</option>
-            <option value="efectivo">Efectivo</option>
-          </SSelect>
+          <Box>
+            <SLabel>Tipo</SLabel>
+            <SSelect {...register("tipo")}>
+              <option value="credito">Crédito</option>
+              <option value="efectivo">Efectivo</option>
+            </SSelect>
+          </Box>
 
           <Input
             bordered

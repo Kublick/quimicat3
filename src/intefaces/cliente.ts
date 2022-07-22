@@ -10,7 +10,6 @@ export const clienteValidation = z.object({
   tipo: z.string(),
   rfc: z.string(),
   tarifaId: z.string(),
-  tarifa: z.string().optional(),
 });
 
 export type ICliente = z.infer<typeof clienteValidation>;

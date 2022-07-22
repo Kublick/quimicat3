@@ -7,6 +7,7 @@ import { securityRouter } from "./security";
 import { configuracionRouter } from "./configuracionRouter";
 import { medicoRouter } from "./medicoRouter";
 import { clienteRouter } from "./clienteRouter";
+import { pacienteRouter } from "./pacienteRouter";
 
 export const appRouter = createRouter()
   .transformer(superjson)
@@ -15,6 +16,7 @@ export const appRouter = createRouter()
   .merge("users.", userRouter)
   .merge("medico.", medicoRouter)
   .merge("cliente.", clienteRouter)
+  .merge("paciente.", pacienteRouter)
   .merge("auth.", authRouter);
 
 // export type definition of API

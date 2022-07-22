@@ -123,7 +123,7 @@ model Cliente {
 
 model Paciente {
   id              String   @id @default(cuid())
-  clave           String
+  clave           String   @unique
   nombre          String
   apellidos       String
   genero          String
@@ -131,7 +131,7 @@ model Paciente {
   celular         String
   emailResultados String
   direccion       String
-  comenatarios    String?
+  comentarios     String?
   tutor           String?
   cliente         Cliente  @relation(fields: [clienteId], references: [id])
   clienteId       String

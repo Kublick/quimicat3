@@ -11,17 +11,15 @@ export const medicoRouter = createRouter()
   .mutation("createMedico", {
     input: medicoValidation,
     async resolve({ input, ctx }) {
-      const medico = await ctx.prisma.medico.create({
+      return await ctx.prisma.medico.create({
         data: {
           ...input,
         },
       });
-      console.log(medico);
-      return medico;
     },
   })
   .mutation("updateMedico", {
-    input: profileValidation,
+    input: medicoValidation,
     async resolve({ input, ctx }) {
       return await ctx.prisma.medico.update({
         where: { id: input.id },
