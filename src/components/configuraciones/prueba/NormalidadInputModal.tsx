@@ -65,10 +65,13 @@ export const NormalidadInputModal: FC<Props> = ({
     reset();
   };
 
+  console.log(errors);
   const onSubmit = (data: IPruebaValorRango) => {
     setError("");
 
-    console.log(data);
+    console.log(editValorRango);
+
+    data.id = data.sexo;
 
     if (editValorRango) {
       const newValorRango = valorRango.filter(
@@ -78,7 +81,7 @@ export const NormalidadInputModal: FC<Props> = ({
         .map((valorRango) => valorRango.id)
         .includes(data.sexo);
       if (mapid) {
-        setError("Parametro ya existe en la lista");
+        setError("Parametro ya existe en la lista!");
         return;
       }
       const update = [...newValorRango, data];
@@ -88,13 +91,13 @@ export const NormalidadInputModal: FC<Props> = ({
       return;
     }
 
-    if (valorRango.length > 0 && !editValorRango) {
+    if (valorRango.length > 0) {
       if (!!valorRango.find((x) => x.id === data.sexo)) {
         setError("Parametro ya existe en la lista");
         return;
       }
     }
-    data.id = data.sexo;
+
     let tableArray = [...(valorRango as []), data];
 
     setValorRango(tableArray as []);
@@ -190,7 +193,7 @@ export const NormalidadInputModal: FC<Props> = ({
           <Button
             auto
             type="submit"
-            disabled={valorRango.length >= 3 ? true : false}
+            disabled={valorRango.length > 3 ? true : false}
           >
             Registrar
           </Button>

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const pruebaValorRangoValidation = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   sexo: z.string(),
   unidad: z.string(),
   edadMaxima: z.number(),

@@ -54,12 +54,8 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = "new", prueba }) => {
   const updatePrueba = trpc.useMutation(["configuracion.updatePrueba"]);
 
   const [disabled, setDisabled] = useState(false);
-  const [valorRango, setValorRango] = useState<IPruebaValorRango[]>(
-    [...prueba.valoresRangos] || []
-  );
-  const [editValorRango, setEditValorRango] = useState<IPruebaValorRango[]>(
-    [...prueba.valoresRangos] || []
-  );
+  const [valorRango, setValorRango] = useState<IPruebaValorRango[]>([]);
+  const [editValorRango, setEditValorRango] = useState<IPruebaValorRango[]>([]);
   const [normalidad, setNormalidad] = useState("");
   const [visible, setVisible] = useState(false);
 
@@ -105,6 +101,13 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = "new", prueba }) => {
   useEffect(() => {
     if (prueba && mode === "edit") {
       reset(prueba as IPrueba);
+
+      if (prueba.tipoValorNormalidad === "texto") {
+        setNormalidad("texto");
+      } else {
+        setValorRango(prueba.valoresRangos);
+        setNormalidad("numerico");
+      }
     }
   }, [prueba, reset, mode]);
 
@@ -145,10 +148,18 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = "new", prueba }) => {
   }
 
   const handleValorNormalidad = (e: ChangeEvent<{ value: string }>) => {
+    if (e.target.value === "texto") {
+      setNormalidad("texto");
+    }
+
+    if (valorRango.length > 0 && e.target.value === "numerico") {
+      setNormalidad("numerico");
+      return;
+    }
+
     if (e.target.value === "numerico") {
       setVisible(true);
-    } else if (e.target.value === "texto") {
-      setNormalidad("texto");
+      return;
     }
   };
 
@@ -486,7 +497,7 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = "new", prueba }) => {
             </Grid>
           </Grid.Container>
 
-          {valorRango?.length > 0 ? (
+          {valorRango.length > 0 && normalidad === "numerico" ? (
             <PruebaNormalidadTable
               rows={valorRango}
               visible={visible}
@@ -506,7 +517,7 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = "new", prueba }) => {
             }}
           >
             <Button
-              type="submit"
+              type="button"
               css={{ mt: 24 }}
               color="secondary"
               onClick={() => router.push("/configuracion/prueba")}
@@ -543,8 +554,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
         id: id as string,
       },
     });
-
-    console.log(prueba);
 
     return {
       props: {
