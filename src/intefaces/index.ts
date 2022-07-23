@@ -8,3 +8,4 @@ export * from "./tarifa";
 export * from "./medico";
 export * from "./cliente";
 export * from "./paciente";
+export * from "./orden";

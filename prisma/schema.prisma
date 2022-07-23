@@ -97,14 +97,16 @@ model Tarifa {
   descripcion String
   isDefault   Boolean   @default(false)
   Cliente     Cliente[]
+  Orden       Orden[]
 }
 
 model Medico {
-  id           String @id @default(cuid())
+  id           String  @id @default(cuid())
   nombre       String
   especialidad String
   telefono     String
   email        String
+  Orden        Orden[]
 }
 
 model Cliente {
@@ -119,6 +121,7 @@ model Cliente {
   tarifa      Tarifa     @relation(fields: [tarifaId], references: [id])
   tarifaId    String
   Paciente    Paciente[]
+  Orden       Orden[]
 }
 
 model Paciente {
@@ -135,4 +138,29 @@ model Paciente {
   tutor           String?
   cliente         Cliente  @relation(fields: [clienteId], references: [id])
   clienteId       String
+  Orden           Orden[]
+}
+
+model Orden {
+  id               String         @id @default(cuid())
+  orderGenerator   OrderGenerator @relation(fields: [orderGeneratorId], references: [id])
+  orderGeneratorId String
+  cliente          Cliente        @relation(fields: [clienteId], references: [id])
+  clienteId        String
+  paciente         Paciente       @relation(fields: [pacienteId], references: [id])
+  pacienteId       String
+  medico           Medico?        @relation(fields: [medicoId], references: [id])
+  medicoId         String
+  tarifa           Tarifa?        @relation(fields: [tarifaId], references: [id])
+  tarifaId         String
+  fecha            DateTime
+  tipo             String
+  status           String
+}
+
+model OrderGenerator {
+  id     String  @id @default(cuid())
+  sucId  String
+  consec Int     @default(autoincrement())
+  Orden  Orden[]
 }

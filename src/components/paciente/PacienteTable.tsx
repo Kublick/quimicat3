@@ -44,6 +44,11 @@ export const PacienteTable: FC<Props> = ({ setPaciente }) => {
       cell: (info) => info.getValue(),
     },
     {
+      accessorKey: "apellidos",
+      header: () => "Apellidos",
+      cell: (info) => info.getValue(),
+    },
+    {
       accessorKey: "celular",
       header: () => "Telefono",
       cell: (info) => info.getValue(),
