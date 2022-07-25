@@ -53,9 +53,11 @@ model Muestra {
 }
 
 model Metodo {
-  id     String   @id @default(cuid())
-  nombre String
-  Prueba Prueba[]
+  id       String   @id @default(cuid())
+  nombre   String
+  Prueba   Prueba[]
+  Perfil   Perfil?  @relation(fields: [perfilId], references: [id])
+  perfilId String?
 }
 
 model Prueba {
@@ -163,4 +165,18 @@ model OrderGenerator {
   sucId  String
   consec Int     @default(autoincrement())
   Orden  Orden[]
+}
+
+model Perfil {
+  id              String   @id @default(cuid())
+  codigo          String
+  abreviatura     String
+  descripcion     String
+  titulo          String
+  metodo          Metodo[]
+  ventaIndividual Boolean  @default(false)
+  sexo            String
+  notas           String
+  notasInternas   String
+  alineacion      String
 }
