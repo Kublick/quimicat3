@@ -12,7 +12,12 @@ export const perfilValidation = z.object({
 	notas: z.string(),
 	notasInternas: z.string(),
 	alineacion: z.string(),
-	testsToDo: z.array(z.object({})).optional(),
+	testsToDo: z.array(
+		z.object({
+			value: z.string(),
+			label: z.string(),
+		}),
+	),
 });
 
 export type IPerfil = z.infer<typeof perfilValidation>;

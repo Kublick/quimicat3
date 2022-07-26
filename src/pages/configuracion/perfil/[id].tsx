@@ -32,7 +32,6 @@ type Props = {
 const PerfilPageById: FC<Props> = ({ perfil, mode }) => {
 	const router = useRouter();
 	const { data: metodos } = trpc.useQuery(['configuracion.getMetodos']);
-	const { data: pruebas } = trpc.useQuery(['configuracion.getPruebasPerfil']);
 	const createPerfil = trpc.useMutation(['configuracion.createPerfil']);
 	const updatePerfil = trpc.useMutation(['configuracion.updatePerfil']);
 
@@ -43,6 +42,7 @@ const PerfilPageById: FC<Props> = ({ perfil, mode }) => {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setValue,
 		reset,
 		control,
 	} = useForm<IPerfil>({
@@ -57,6 +57,7 @@ const PerfilPageById: FC<Props> = ({ perfil, mode }) => {
 			notas: '',
 			notasInternas: '',
 			alineacion: 'izquierda',
+			testsToDo: [],
 		},
 		mode: 'onBlur',
 		resolver: zodResolver(perfilValidation),
@@ -66,18 +67,11 @@ const PerfilPageById: FC<Props> = ({ perfil, mode }) => {
 		if (perfil) {
 			reset(perfil);
 		}
+		setSelected(perfil?.testsToDo as any);
 	}, [reset, perfil]);
-
-	console.log(errors);
-
-	console.log({ selected });
 
 	const onSubmit = async (data: IPerfil) => {
 		setDisabled(true);
-
-		if (selected) {
-			data = { ...data, testsToDo: selected };
-		}
 
 		if (mode === 'new') {
 			createPerfil.mutateAsync(data);
@@ -127,7 +121,6 @@ const PerfilPageById: FC<Props> = ({ perfil, mode }) => {
 		<UserLayout title="Perfil">
 			<Text h4>{textMode}</Text>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<Box></Box>
 				<Card
 					css={{
 						p: '1rem',
@@ -275,7 +268,11 @@ const PerfilPageById: FC<Props> = ({ perfil, mode }) => {
 						</Button>
 					</Box>
 				</Card>
-				<PruebasSelector selected={selected} setSelected={setSelected} />
+				<PruebasSelector
+					selected={selected}
+					setSelected={setSelected}
+					setValue={setValue}
+				/>
 			</form>
 		</UserLayout>
 	);

@@ -10,9 +10,14 @@ import { StrictModeDroppable } from '../../ui/drag/Droppable';
 type Props = {
 	selected: any;
 	setSelected: any;
+	setValue: any;
 };
 
-export const PruebasSelector: FC<Props> = ({ selected, setSelected }) => {
+export const PruebasSelector: FC<Props> = ({
+	selected,
+	setSelected,
+	setValue,
+}) => {
 	const { data: pruebasPerfil } = trpc.useQuery([
 		'configuracion.getPruebasPerfil',
 	]);
@@ -35,6 +40,7 @@ export const PruebasSelector: FC<Props> = ({ selected, setSelected }) => {
 	}
 
 	function handleSelectChange(values: any) {
+		setValue('testsToDo', values);
 		setSelected(values);
 	}
 

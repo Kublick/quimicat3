@@ -17,7 +17,6 @@ export const configuracionRouter = createRouter()
 	.mutation('createDepartamento', {
 		input: departamentoValidation,
 		async resolve({ input, ctx }) {
-			console.log('entro');
 			return await ctx.prisma.departamento.create({
 				data: {
 					nombre: input.nombre,
@@ -171,17 +170,6 @@ export const configuracionRouter = createRouter()
 			return await ctx.prisma.perfil.create({
 				data: {
 					...input,
-					// id: input.id,
-					// codigo: input.codigo,
-					// abreviatura: input.abreviatura,
-					// titulo: input.titulo,
-					// descripcion: input.descripcion,
-					// metodoId: input.metodoId,
-					// ventaIndividual: input.ventaIndividual,
-					// sexo: input.sexo,
-					// notas: input.notas,
-					// notasInternas: input.notasInternas,
-					// alineacion: input.alineacion,
 				},
 			});
 		},
