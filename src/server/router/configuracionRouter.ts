@@ -98,6 +98,17 @@ export const configuracionRouter = createRouter()
 			});
 		},
 	})
+	.query('getPruebasPerfil', {
+		async resolve({ ctx }) {
+			return await ctx.prisma.prueba.findMany({
+				include: {
+					departamento: true,
+					metodo: true,
+					muestra: true,
+				},
+			});
+		},
+	})
 	.mutation('createPrueba', {
 		input: pruebaValidation,
 		async resolve({ input, ctx }) {
@@ -111,8 +122,6 @@ export const configuracionRouter = createRouter()
 	.mutation('updatePrueba', {
 		input: pruebaValidation,
 		async resolve({ input, ctx }) {
-			console.log('manda input', input);
-
 			return await ctx.prisma.prueba.update({
 				where: { id: input.id },
 				data: {
@@ -149,7 +158,11 @@ export const configuracionRouter = createRouter()
 	})
 	.query('getPerfiles', {
 		async resolve({ ctx }) {
-			return await ctx.prisma.perfil.findMany();
+			return await ctx.prisma.perfil.findMany({
+				include: {
+					metodo: true,
+				},
+			});
 		},
 	})
 	.mutation('createPerfil', {
@@ -158,6 +171,17 @@ export const configuracionRouter = createRouter()
 			return await ctx.prisma.perfil.create({
 				data: {
 					...input,
+					// id: input.id,
+					// codigo: input.codigo,
+					// abreviatura: input.abreviatura,
+					// titulo: input.titulo,
+					// descripcion: input.descripcion,
+					// metodoId: input.metodoId,
+					// ventaIndividual: input.ventaIndividual,
+					// sexo: input.sexo,
+					// notas: input.notas,
+					// notasInternas: input.notasInternas,
+					// alineacion: input.alineacion,
 				},
 			});
 		},

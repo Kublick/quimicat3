@@ -53,11 +53,10 @@ model Muestra {
 }
 
 model Metodo {
-  id       String   @id @default(cuid())
-  nombre   String
-  Prueba   Prueba[]
-  Perfil   Perfil?  @relation(fields: [perfilId], references: [id])
-  perfilId String?
+  id     String   @id @default(cuid())
+  nombre String
+  Prueba Prueba[]
+  Perfil Perfil[]
 }
 
 model Prueba {
@@ -168,13 +167,14 @@ model OrderGenerator {
 }
 
 model Perfil {
-  id              String   @id @default(cuid())
+  id              String  @id @default(cuid())
   codigo          String
   abreviatura     String
   descripcion     String
   titulo          String
-  metodo          Metodo[]
-  ventaIndividual Boolean  @default(false)
+  metodo          Metodo  @relation(fields: [metodoId], references: [id])
+  metodoId        String
+  ventaIndividual Boolean @default(false)
   sexo            String
   notas           String
   notasInternas   String
