@@ -32,8 +32,6 @@ export const PruebasSelector: FC<Props> = ({ selected, setSelected }) => {
 		const [reorderedItem] = items.splice(result.source.index, 1);
 		items.splice(result.destination.index, 0, reorderedItem);
 		setSelected(items);
-
-		setDragged(false);
 	}
 
 	function handleSelectChange(values: any) {
@@ -49,11 +47,11 @@ export const PruebasSelector: FC<Props> = ({ selected, setSelected }) => {
 	}
 
 	const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
-		background: isDragging ? `#0072F5` : 'white',
-		opacity: isDragging ? 0.2 : 1,
+		background: isDragging ? `#0072F5` : '#fff',
+		transition: 'background-color .8s ease-out',
 		width: '75%',
 		color: isDragging ? 'white' : 'black',
-		padding: '0.5rem',
+		padding: '0rem 1rem',
 		borderRadius: '0.5rem',
 		...draggableStyle,
 	});
@@ -84,11 +82,7 @@ export const PruebasSelector: FC<Props> = ({ selected, setSelected }) => {
 			<DragDropContext onDragEnd={handleOnDragEnd}>
 				<StrictModeDroppable droppableId="perfiles">
 					{(provided) => (
-						<ul
-							className=""
-							{...provided.droppableProps}
-							ref={provided.innerRef}
-						>
+						<ul {...provided.droppableProps} ref={provided.innerRef}>
 							{selected.map(({ value, label }: any, index: any) => {
 								return (
 									<Draggable key={value} draggableId={value} index={index}>
@@ -102,11 +96,14 @@ export const PruebasSelector: FC<Props> = ({ selected, setSelected }) => {
 													provided.draggableProps.style,
 												)}
 											>
-												<div className="grid grid-cols-5  ">
-													<p className="col-span-4">{label}</p>
+												<div className="grid grid-cols-5 items-center ">
+													<p className="col-span-4 font-semibold text-xs">
+														{label}
+													</p>
 													<div className="flex justify-center items-center">
 														<Button
 															name={value}
+															size="sm"
 															color="error"
 															onClick={handleRemoveValue}
 															auto

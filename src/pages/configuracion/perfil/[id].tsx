@@ -68,8 +68,17 @@ const PerfilPageById: FC<Props> = ({ perfil, mode }) => {
 		}
 	}, [reset, perfil]);
 
+	console.log(errors);
+
+	console.log({ selected });
+
 	const onSubmit = async (data: IPerfil) => {
 		setDisabled(true);
+
+		if (selected) {
+			data = { ...data, testsToDo: selected };
+		}
+
 		if (mode === 'new') {
 			createPerfil.mutateAsync(data);
 			toast.success('Perfil creado correctamente');

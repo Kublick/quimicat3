@@ -179,4 +179,5 @@ model Perfil {
   notas           String
   notasInternas   String
   alineacion      String
+  testsToDo       Json
 }
