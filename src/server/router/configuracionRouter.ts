@@ -6,6 +6,7 @@ import {
 	pruebaValidation,
 	tarifaValidation,
 	perfilValidation,
+	paqueteValidation,
 } from '../../intefaces';
 import { createRouter } from './context';
 
@@ -221,6 +222,39 @@ export const configuracionRouter = createRouter()
 				},
 				include: {
 					item: true,
+				},
+			});
+		},
+	})
+	.query('getPaquetes', {
+		async resolve({ ctx }) {
+			return await ctx.prisma.paquete.findMany();
+		},
+	})
+	.mutation('createPaquete', {
+		input: paqueteValidation,
+		async resolve({ input, ctx }) {
+			await ctx.prisma.items.create({
+				data: {
+					name: `${input.abreviatura} - ${input.descripcion}`,
+					tipo: `PAQUETE`,
+				},
+			});
+
+			return await ctx.prisma.paquete.create({
+				data: {
+					...input,
+				},
+			});
+		},
+	})
+	.mutation('updatePaquete', {
+		input: paqueteValidation,
+		async resolve({ input, ctx }) {
+			return await ctx.prisma.paquete.update({
+				where: { id: input.id },
+				data: {
+					...input,
 				},
 			});
 		},

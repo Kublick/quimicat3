@@ -10,3 +10,4 @@ export * from './cliente';
 export * from './paciente';
 export * from './orden';
 export * from './perfil';
+export * from './paquete';

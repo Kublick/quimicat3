@@ -228,3 +228,14 @@ model ItemsTarifa {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Paquete {
+  id            String   @id @default(cuid())
+  abreviatura   String
+  descripcion   String
+  indicaciones  String
+  notasInternas String
+  testsToDo     Json
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
