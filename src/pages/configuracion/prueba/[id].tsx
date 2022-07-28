@@ -26,6 +26,7 @@ import { Box, ErrorText } from '../../../styles/TableStyles';
 import { trpc } from '../../../utils/trpc';
 import { prisma } from '../../../server/db/client';
 import { z } from 'zod';
+import { toast } from 'react-toastify';
 
 type Props = {
 	mode: string;
@@ -114,24 +115,26 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 	console.log(errors);
 
 	const onSubmit = async (data: IPrueba) => {
-		const getMetodoNombre = departamentos?.find(
-			(departamento) => departamento.id === data.departamentoId,
-		)?.nombre;
 		setDisabled(true);
 		let newData: IPrueba = {
 			...data,
 			valoresRangos: [],
-			departamentoNombre: getMetodoNombre,
 		};
 
 		if (valorRango) {
-			newData = { ...data, valoresRangos: [...valorRango] };
+			newData = {
+				...data,
+				valoresRangos: [...valorRango],
+			};
 		}
+
 		if (mode === 'new') {
 			createPrueba.mutateAsync(newData);
+			toast.success('Prueba creada correctamente');
 		}
 		if (mode === 'edit') {
 			updatePrueba.mutateAsync(newData);
+			toast.success('Prueba actualizada correctamente');
 		}
 		setTimeout(() => {
 			setDisabled(false);

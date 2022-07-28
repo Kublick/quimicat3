@@ -36,7 +36,7 @@ const PerfilPageById: FC<Props> = ({ perfil, mode }) => {
 	const updatePerfil = trpc.useMutation(['configuracion.updatePerfil']);
 
 	const [disabled, setDisabled] = useState(false);
-	const [selected, setSelected] = useState<IPrueba[]>([]);
+	const [selected, setSelected] = useState([]);
 
 	const {
 		register,
@@ -268,11 +268,13 @@ const PerfilPageById: FC<Props> = ({ perfil, mode }) => {
 						</Button>
 					</Box>
 				</Card>
-				<PruebasSelector
-					selected={selected}
-					setSelected={setSelected}
-					setValue={setValue}
-				/>
+				{selected?.length > 0 && (
+					<PruebasSelector
+						selected={selected}
+						setSelected={setSelected}
+						setValue={setValue}
+					/>
+				)}
 			</form>
 		</UserLayout>
 	);
