@@ -111,9 +111,19 @@ const ConfiguracionPruebaById: FC<Props> = ({ mode = 'new', prueba }) => {
 		}
 	}, [prueba, reset, mode]);
 
+	console.log(errors);
+
 	const onSubmit = async (data: IPrueba) => {
+		const getMetodoNombre = departamentos?.find(
+			(departamento) => departamento.id === data.departamentoId,
+		)?.nombre;
 		setDisabled(true);
-		let newData: IPrueba = { ...data, valoresRangos: [] };
+		let newData: IPrueba = {
+			...data,
+			valoresRangos: [],
+			departamentoNombre: getMetodoNombre,
+		};
+
 		if (valorRango) {
 			newData = { ...data, valoresRangos: [...valorRango] };
 		}
@@ -547,11 +557,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const { id, view } = query;
 
 	if (regexValidation.safeParse(id).success === true) {
-		const prueba = await prisma.prueba.findFirst({
+		let prueba = await prisma.prueba.findFirst({
 			where: {
 				id: id as string,
 			},
 		});
+
+		prueba = JSON.parse(JSON.stringify(prueba));
 
 		return {
 			props: {
