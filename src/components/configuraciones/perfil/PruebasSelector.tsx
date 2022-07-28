@@ -28,7 +28,7 @@ export const PruebasSelector: FC<Props> = ({
 
 	const options = pruebasPerfil.map((prueba) => ({
 		value: prueba.id,
-		label: `${prueba.departamento.nombre} > ${prueba.abreviatura} - ${prueba.metodo.nombre}`,
+		label: `${prueba.departamento.nombre} > ${prueba.abreviatura} - ${prueba.titulo}`,
 	}));
 
 	function handleOnDragEnd(result: any) {
@@ -89,7 +89,7 @@ export const PruebasSelector: FC<Props> = ({
 				<StrictModeDroppable droppableId="perfiles">
 					{(provided) => (
 						<ul {...provided.droppableProps} ref={provided.innerRef}>
-							{selected.map(({ value, label }: any, index: any) => {
+							{selected?.map(({ value, label }: any, index: any) => {
 								return (
 									<Draggable key={value} draggableId={value} index={index}>
 										{(provided, snapshot) => (

@@ -268,13 +268,12 @@ const PerfilPageById: FC<Props> = ({ perfil, mode }) => {
 						</Button>
 					</Box>
 				</Card>
-				{selected?.length > 0 && (
-					<PruebasSelector
-						selected={selected}
-						setSelected={setSelected}
-						setValue={setValue}
-					/>
-				)}
+
+				<PruebasSelector
+					selected={selected}
+					setSelected={setSelected}
+					setValue={setValue}
+				/>
 			</form>
 		</UserLayout>
 	);
@@ -286,11 +285,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const { id, view } = query;
 
 	if (regexValidation.safeParse(id).success === true) {
-		const perfil = await prisma.perfil.findFirst({
+		let perfil = await prisma.perfil.findFirst({
 			where: {
 				id: id as string,
 			},
 		});
+
+		perfil = JSON.parse(JSON.stringify(perfil));
 
 		return {
 			props: {

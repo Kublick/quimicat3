@@ -44,7 +44,6 @@ export const configuracionRouter = createRouter()
 	.mutation('createMetodo', {
 		input: metodoValidation,
 		async resolve({ input, ctx }) {
-			console.log('entro');
 			return await ctx.prisma.metodo.create({
 				data: {
 					nombre: input.nombre,
@@ -112,13 +111,17 @@ export const configuracionRouter = createRouter()
 	.mutation('createPrueba', {
 		input: pruebaValidation,
 		async resolve({ input, ctx }) {
-			console.log(input);
-
 			if (input.ventaIndividual) {
+				const departamento = await ctx.prisma.departamento.findFirst({
+					where: {
+						id: input.departamentoId,
+					},
+				});
+
 				await ctx.prisma.items.create({
 					data: {
 						name: `${input.codigo} - ${input.descripcion}`,
-						tipo: `PRUEBAS: ${input.departamentoNombre}`,
+						tipo: `PRUEBAS: ${departamento?.nombre}`,
 					},
 				});
 			}
@@ -178,6 +181,15 @@ export const configuracionRouter = createRouter()
 	.mutation('createPerfil', {
 		input: perfilValidation,
 		async resolve({ input, ctx }) {
+			if (input.ventaIndividual) {
+				await ctx.prisma.items.create({
+					data: {
+						name: `${input.codigo} - ${input.descripcion}`,
+						tipo: `PERFILES`,
+					},
+				});
+			}
+
 			return await ctx.prisma.perfil.create({
 				data: {
 					...input,
