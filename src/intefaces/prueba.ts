@@ -20,6 +20,7 @@ export const pruebaValidation = z.object({
 	titulo: z.string(),
 	hojaTrabajo: z.string(),
 	departamentoId: z.string().min(1),
+	departamentoNombre: z.string().optional(),
 	muestraId: z.string(),
 	metodoId: z.string(),
 	printMetodo: z.string(),

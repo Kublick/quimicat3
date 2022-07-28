@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import {
 	metodoValidation,
 	departamentoValidation,
@@ -111,6 +112,16 @@ export const configuracionRouter = createRouter()
 	.mutation('createPrueba', {
 		input: pruebaValidation,
 		async resolve({ input, ctx }) {
+			console.log(input);
+
+			if (input.ventaIndividual) {
+				await ctx.prisma.items.create({
+					data: {
+						name: `${input.codigo} - ${input.descripcion}`,
+						tipo: `PRUEBAS: ${input.departamentoNombre}`,
+					},
+				});
+			}
 			return await ctx.prisma.prueba.create({
 				data: {
 					...input,
@@ -181,6 +192,23 @@ export const configuracionRouter = createRouter()
 				where: { id: input.id },
 				data: {
 					...input,
+				},
+			});
+		},
+	})
+	.query('getItemsTarifas', {
+		input: z.object({
+			tarifaId: z.string(),
+		}),
+		async resolve({ input, ctx }) {
+			return await ctx.prisma.itemsTarifa.findMany({
+				where: {
+					tarifa: {
+						id: input.tarifaId,
+					},
+				},
+				include: {
+					item: true,
 				},
 			});
 		},

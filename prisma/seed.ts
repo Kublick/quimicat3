@@ -1,4 +1,5 @@
 import { prisma } from '../src/server/db/client';
+import bcrypt from 'bcryptjs';
 
 const createSucursales = async () => {
 	await prisma.sucursal.createMany({
@@ -46,6 +47,60 @@ const createPerfiles = async () => {
 				enabledFeatures: {},
 			},
 		],
+	});
+};
+
+const createUsers = async () => {
+	const profile = await prisma.profile.findFirst({
+		where: { nombre: 'Admin' },
+	});
+
+	const sucursal = await prisma.sucursal.findFirst({
+		where: { nombre: 'Matriz' },
+	});
+
+	let password = 'Testing01!';
+
+	const hashedPassword = await bcrypt.hash(password, 10);
+
+	await prisma.user.create({
+		data: {
+			name: 'Admin',
+			username: 'admin',
+			password: hashedPassword,
+			role: 'Admin',
+			profileId: profile?.id,
+			sucursalId: sucursal?.id,
+		},
+	});
+};
+
+const createTarifa = async () => {
+	await prisma.tarifa.create({
+		data: {
+			nombre: 'Publico en General',
+			descripcion: 'Publico en General',
+			isDefault: true,
+		},
+	});
+};
+
+const createCliente = async () => {
+	const tarifa = await prisma.tarifa.findFirst({
+		where: { nombre: 'Publico en General' },
+	});
+
+	await prisma.cliente.create({
+		data: {
+			nombre: 'Publico en General',
+			abreviatura: 'PBGEN',
+			email: '',
+			telefono: '',
+			direccion: '',
+			tipo: 'efectivo',
+			rfc: 'XX0XX0XX0',
+			tarifaId: String(tarifa?.id),
+		},
 	});
 };
 
@@ -674,6 +729,9 @@ async function main() {
 	await createMuestras();
 	await createMetodos();
 	await createDepartamentos();
+	await createUsers();
+	await createTarifa();
+	await createCliente();
 }
 
 main();

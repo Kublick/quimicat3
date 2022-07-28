@@ -19,25 +19,33 @@ model User {
   status     String?   @default("activo")
   Profile    Profile?  @relation(fields: [profileId], references: [id])
   Sucursal   Sucursal? @relation(fields: [sucursalId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model Sucursal {
-  id     String @id @default(cuid())
-  nombre String
-  User   User[]
+  id        String   @id @default(cuid())
+  nombre    String
+  User      User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Profile {
-  id              String @id @default(cuid())
+  id              String   @id @default(cuid())
   nombre          String
   enabledFeatures Json
   User            User[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Departamento {
-  id     String   @id @default(cuid())
-  nombre String
-  Prueba Prueba[]
+  id        String   @id @default(cuid())
+  nombre    String
+  Prueba    Prueba[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Muestra {
@@ -50,13 +58,17 @@ model Muestra {
   observaciones  String   @default("")
   startAsPending Boolean  @default(false)
   Prueba         Prueba[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Metodo {
-  id     String   @id @default(cuid())
-  nombre String
-  Prueba Prueba[]
-  Perfil Perfil[]
+  id        String   @id @default(cuid())
+  nombre    String
+  Prueba    Prueba[]
+  Perfil    Perfil[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Prueba {
@@ -90,24 +102,31 @@ model Prueba {
   muestra              Muestra      @relation(fields: [muestraId], references: [id])
   muestraId            String
   valoresRangos        Json?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
 }
 
 model Tarifa {
-  id          String    @id @default(cuid())
+  id          String        @id @default(cuid())
   nombre      String
   descripcion String
-  isDefault   Boolean   @default(false)
+  isDefault   Boolean       @default(false)
   Cliente     Cliente[]
   Orden       Orden[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  ItemsTarifa ItemsTarifa[]
 }
 
 model Medico {
-  id           String  @id @default(cuid())
+  id           String   @id @default(cuid())
   nombre       String
   especialidad String
   telefono     String
   email        String
   Orden        Orden[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Cliente {
@@ -123,6 +142,8 @@ model Cliente {
   tarifaId    String
   Paciente    Paciente[]
   Orden       Orden[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Paciente {
@@ -140,6 +161,8 @@ model Paciente {
   cliente         Cliente  @relation(fields: [clienteId], references: [id])
   clienteId       String
   Orden           Orden[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Orden {
@@ -157,27 +180,51 @@ model Orden {
   fecha            DateTime
   tipo             String
   status           String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 }
 
 model OrderGenerator {
-  id     String  @id @default(cuid())
-  sucId  String
-  consec Int     @default(autoincrement())
-  Orden  Orden[]
+  id        String   @id @default(cuid())
+  sucId     String
+  consec    Int      @default(autoincrement())
+  Orden     Orden[]
+  createdAt DateTime
+  updatedAt DateTime
 }
 
 model Perfil {
-  id              String  @id @default(cuid())
+  id              String   @id @default(cuid())
   codigo          String
   abreviatura     String
   descripcion     String
   titulo          String
-  metodo          Metodo  @relation(fields: [metodoId], references: [id])
+  metodo          Metodo   @relation(fields: [metodoId], references: [id])
   metodoId        String
-  ventaIndividual Boolean @default(false)
+  ventaIndividual Boolean  @default(false)
   sexo            String
   notas           String
   notasInternas   String
   alineacion      String
   testsToDo       Json
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Items {
+  id          String        @id @default(cuid())
+  name        String
+  tipo        String
+  ItemsTarifa ItemsTarifa[]
+}
+
+model ItemsTarifa {
+  id        String   @id @default(cuid())
+  tarifa    Tarifa   @relation(fields: [tarifaId], references: [id])
+  tarifaId  String
+  item      Items    @relation(fields: [itemId], references: [id])
+  itemId    String
+  precio    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
