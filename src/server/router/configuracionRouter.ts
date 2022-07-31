@@ -113,18 +113,18 @@ export const configuracionRouter = createRouter()
 		input: pruebaValidation,
 		async resolve({ input, ctx }) {
 			if (input.ventaIndividual) {
-				const departamento = await ctx.prisma.departamento.findFirst({
-					where: {
-						id: input.departamentoId,
+				const prueba = await ctx.prisma.prueba.create({
+					data: {
+						...input,
 					},
 				});
 
 				await ctx.prisma.items.create({
 					data: {
-						name: `${input.codigo} - ${input.descripcion}`,
-						tipo: `PRUEBAS: ${departamento?.nombre}`,
+						pruebaId: prueba.id,
 					},
 				});
+				return prueba;
 			}
 			return await ctx.prisma.prueba.create({
 				data: {
@@ -136,6 +136,36 @@ export const configuracionRouter = createRouter()
 	.mutation('updatePrueba', {
 		input: pruebaValidation,
 		async resolve({ input, ctx }) {
+			const checkPrevious = await ctx.prisma.prueba.findFirst({
+				where: {
+					id: input.id,
+				},
+			});
+
+			if (
+				checkPrevious?.ventaIndividual === true &&
+				input.ventaIndividual === false
+			) {
+				await ctx.prisma.items.deleteMany({
+					where: {
+						pruebaId: input.id,
+					},
+				});
+			}
+
+			if (input.ventaIndividual) {
+				if (
+					checkPrevious?.ventaIndividual === false &&
+					input.ventaIndividual === true
+				) {
+					await ctx.prisma.items.create({
+						data: {
+							pruebaId: input.id,
+						},
+					});
+				}
+			}
+
 			return await ctx.prisma.prueba.update({
 				where: { id: input.id },
 				data: {
@@ -182,20 +212,21 @@ export const configuracionRouter = createRouter()
 	.mutation('createPerfil', {
 		input: perfilValidation,
 		async resolve({ input, ctx }) {
-			if (input.ventaIndividual) {
-				await ctx.prisma.items.create({
-					data: {
-						name: `${input.codigo} - ${input.descripcion}`,
-						tipo: `PERFILES`,
-					},
-				});
-			}
-
-			return await ctx.prisma.perfil.create({
+			const perfil = await ctx.prisma.perfil.create({
 				data: {
 					...input,
 				},
 			});
+
+			if (input.ventaIndividual) {
+				await ctx.prisma.items.create({
+					data: {
+						perfilId: perfil.id,
+					},
+				});
+			}
+
+			return perfil;
 		},
 	})
 	.mutation('updatePerfil', {
@@ -214,6 +245,31 @@ export const configuracionRouter = createRouter()
 			tarifaId: z.string(),
 		}),
 		async resolve({ input, ctx }) {
+			const items = await ctx.prisma.items.findMany();
+			const itemsTarifa = await ctx.prisma.itemsTarifa.findMany({
+				where: {
+					tarifaId: input.tarifaId,
+				},
+			});
+
+			let filter = items.filter(
+				(item) =>
+					!itemsTarifa.find((itemsTarifa) => itemsTarifa.itemId === item.id),
+			);
+
+			console.log(filter);
+
+			if (filter.length > 0) {
+				console.log('entro');
+				await ctx.prisma.itemsTarifa.createMany({
+					data: filter.map((item) => ({
+						itemId: item.id,
+						tarifaId: input.tarifaId,
+						precio: 0,
+					})),
+				});
+			}
+
 			return await ctx.prisma.itemsTarifa.findMany({
 				where: {
 					tarifa: {
@@ -234,18 +290,19 @@ export const configuracionRouter = createRouter()
 	.mutation('createPaquete', {
 		input: paqueteValidation,
 		async resolve({ input, ctx }) {
-			await ctx.prisma.items.create({
-				data: {
-					name: `${input.abreviatura} - ${input.descripcion}`,
-					tipo: `PAQUETE`,
-				},
-			});
-
-			return await ctx.prisma.paquete.create({
+			const paquete = await ctx.prisma.paquete.create({
 				data: {
 					...input,
 				},
 			});
+
+			await ctx.prisma.items.create({
+				data: {
+					paqueteId: paquete.id,
+				},
+			});
+
+			return paquete;
 		},
 	})
 	.mutation('updatePaquete', {
@@ -257,5 +314,43 @@ export const configuracionRouter = createRouter()
 					...input,
 				},
 			});
+		},
+	})
+	.mutation('updatePrecio', {
+		input: z.object({
+			id: z.string(),
+			precio: z.number(),
+		}),
+
+		async resolve({ input, ctx }) {
+			let items = [
+				{
+					id: 'cl66xobhb0356p8vrwxmfisgr',
+					precio: 0,
+				},
+				{
+					id: 'cl66xcgzi0120p8vrlyce72ol',
+					precio: 0,
+				},
+				{
+					id: 'cl66xobhb0355p8vr6bdkna8o',
+					precio: 0,
+				},
+			];
+
+			for (let key in items) {
+				console.log(
+					'🚀 ~ file: configuracionRouter.ts ~ line 292 ~ resolve ~ input',
+					input,
+				);
+				console.log('valor key', key);
+
+				await ctx.prisma.itemsTarifa.update({
+					where: { id: input.id },
+					data: {
+						precio: input.precio,
+					},
+				});
+			}
 		},
 	});

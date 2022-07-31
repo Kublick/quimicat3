@@ -104,6 +104,7 @@ model Prueba {
   valoresRangos        Json?
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @updatedAt
+  Items                Items[]
 }
 
 model Tarifa {
@@ -209,13 +210,18 @@ model Perfil {
   testsToDo       Json
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  Items           Items[]
 }
 
 model Items {
   id          String        @id @default(cuid())
-  name        String
-  tipo        String
   ItemsTarifa ItemsTarifa[]
+  prueba      Prueba?       @relation(fields: [pruebaId], references: [id])
+  pruebaId    String?
+  perfil      Perfil?       @relation(fields: [perfilId], references: [id])
+  perfilId    String?
+  paquete     Paquete?      @relation(fields: [paqueteId], references: [id])
+  paqueteId   String?
 }
 
 model ItemsTarifa {
@@ -238,4 +244,5 @@ model Paquete {
   testsToDo     Json
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  Items         Items[]
 }
