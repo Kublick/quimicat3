@@ -246,6 +246,9 @@ export const configuracionRouter = createRouter()
 		}),
 		async resolve({ input, ctx }) {
 			const items = await ctx.prisma.items.findMany();
+
+			console.log(items);
+
 			const itemsTarifa = await ctx.prisma.itemsTarifa.findMany({
 				where: {
 					tarifaId: input.tarifaId,
@@ -257,10 +260,7 @@ export const configuracionRouter = createRouter()
 					!itemsTarifa.find((itemsTarifa) => itemsTarifa.itemId === item.id),
 			);
 
-			console.log(filter);
-
 			if (filter.length > 0) {
-				console.log('entro');
 				await ctx.prisma.itemsTarifa.createMany({
 					data: filter.map((item) => ({
 						itemId: item.id,
@@ -277,7 +277,13 @@ export const configuracionRouter = createRouter()
 					},
 				},
 				include: {
-					item: true,
+					item: {
+						include: {
+							prueba: true,
+							paquete: true,
+							perfil: true,
+						},
+					},
 				},
 			});
 		},
