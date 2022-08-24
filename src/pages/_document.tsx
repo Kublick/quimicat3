@@ -7,7 +7,7 @@ import Document, {
 	NextScript,
 	DocumentContext,
 } from 'next/document';
-import { resetServerContext } from 'react-beautiful-dnd';
+// import { resetServerContext } from 'react-beautiful-dnd';
 
 const MyDocument = () => {
 	return (
@@ -23,7 +23,7 @@ const MyDocument = () => {
 
 MyDocument.getInitialProps = async (context: DocumentContext) => {
 	const initialProps = await Document.getInitialProps(context);
-	resetServerContext();
+	// resetServerContext();
 	return {
 		...initialProps,
 		styles: [...Children.toArray(initialProps.styles)],
