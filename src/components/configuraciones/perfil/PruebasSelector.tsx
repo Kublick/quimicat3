@@ -47,7 +47,6 @@ export const PruebasSelector: FC<Props> = ({
 
 	const reorderItem = (values: any) => {
 		setItems(values);
-		console.log(items);
 	};
 
 	function handleRemoveValue(e: any) {
