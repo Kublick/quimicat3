@@ -10,6 +10,9 @@ import { Box } from "../../styles/TableStyles";
 
 const ClientePage = () => {
   const { showModal, setShowModal } = uiContext();
+
+  const [showClienteModal, setShowClienteModal] = useState(false);
+
   const [cliente, setCliete] = useState<ICliente | null>(null);
 
   return (
@@ -25,7 +28,7 @@ const ClientePage = () => {
         <Button
           auto
           icon={<PlusCircleIcon className="w-5 h-5" />}
-          onClick={() => setShowModal(true)}
+          onClick={() => setShowClienteModal(true)}
         >
           Crear Cliente
         </Button>
@@ -35,10 +38,14 @@ const ClientePage = () => {
       <Modal
         closeButton
         aria-labelledby="Departamento"
-        open={showModal}
-        onClose={() => setShowModal(false)}
+        open={showClienteModal}
+        onClose={() => setShowClienteModal(false)}
       >
-        <ClienteInputModal setCliente={setCliete} cliente={cliente} />
+        <ClienteInputModal
+          setCliente={setCliete}
+          cliente={cliente}
+          setShowClienteModal={setShowClienteModal}
+        />
       </Modal>
     </UserLayout>
   );

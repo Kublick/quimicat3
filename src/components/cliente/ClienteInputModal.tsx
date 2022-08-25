@@ -4,7 +4,6 @@ import React, { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { clienteValidation, ICliente } from "../../intefaces";
-import { uiContext } from "../../store/uiSlice";
 import { SLabel, SSelect } from "../../styles/SelectStyles";
 import { Box } from "../../styles/TableStyles";
 import { trpc } from "../../utils/trpc";
@@ -13,15 +12,16 @@ type Props = {
   cliente: ICliente | null;
   setCliente: (cliente: ICliente | null) => void;
   mode?: "new" | "edit";
+  setShowClienteModal: (showClienteModal: boolean) => void;
 };
 
 export const ClienteInputModal: FC<Props> = ({
   cliente,
   setCliente,
   mode = "new",
+  setShowClienteModal,
 }) => {
   const utils = trpc.useContext();
-  const { setShowModal } = uiContext();
 
   const [disabled, setDisabled] = useState(false);
 
@@ -100,7 +100,7 @@ export const ClienteInputModal: FC<Props> = ({
       toast.success("Cliente actualizado correctamente");
     }
 
-    setShowModal(false);
+    setShowClienteModal(false);
     setDisabled(false);
   };
 
@@ -197,7 +197,11 @@ export const ClienteInputModal: FC<Props> = ({
           />
 
           <div className="flex justify-end gap-2 mt-4">
-            <Button color="secondary" onClick={() => setShowModal(false)} auto>
+            <Button
+              color="secondary"
+              onClick={() => setShowClienteModal(false)}
+              auto
+            >
               Regresar
             </Button>
             <Button type="submit" disabled={disabled} auto>
