@@ -5,11 +5,10 @@ import { UserLayout } from "../../components/layout";
 import { PacienteInputModal } from "../../components/paciente/PacienteInputModal";
 import { PacienteTable } from "../../components/paciente/PacienteTable";
 import { IMedico, IPaciente } from "../../intefaces";
-import { uiContext } from "../../store/uiSlice";
 import { Box } from "../../styles/TableStyles";
 
 const PacientePage = () => {
-  const { showModal, setShowModal } = uiContext();
+  const [showModalPaciente, setShowModalPaciente] = useState(false);
   const [paciente, setPaciente] = useState<IPaciente | null>(null);
 
   return (
@@ -25,7 +24,7 @@ const PacientePage = () => {
         <Button
           auto
           icon={<PlusCircleIcon className="w-5 h-5" />}
-          onClick={() => setShowModal(true)}
+          onClick={() => setShowModalPaciente(true)}
         >
           Crear Paciente
         </Button>
@@ -34,11 +33,15 @@ const PacientePage = () => {
       <Modal
         closeButton
         aria-labelledby="Departamento"
-        open={showModal}
-        onClose={() => setShowModal(false)}
+        open={showModalPaciente}
+        onClose={() => setShowModalPaciente(false)}
         width="600px"
       >
-        <PacienteInputModal setPaciente={setPaciente} paciente={paciente} />
+        <PacienteInputModal
+          setPaciente={setPaciente}
+          paciente={paciente}
+          setShowModalPaciente={setShowModalPaciente}
+        />
       </Modal>
     </UserLayout>
   );
