@@ -1,108 +1,123 @@
-import {
-	ChevronDownIcon,
-	ChevronLeftIcon,
-	ChevronRightIcon,
-	ChevronUpIcon,
-} from '@heroicons/react/solid';
-import { Button, Card } from '@nextui-org/react';
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useEffect, useMemo, useState } from 'react';
+import ReactDOM from 'react-dom/client';
+
 import {
 	ColumnDef,
-	ColumnFiltersState,
-	FilterFn,
-	flexRender,
+	useReactTable,
 	getCoreRowModel,
-	getFacetedMinMaxValues,
-	getFacetedRowModel,
-	getFacetedUniqueValues,
 	getFilteredRowModel,
 	getPaginationRowModel,
-	getSortedRowModel,
-	useReactTable,
+	flexRender,
+	RowData,
 } from '@tanstack/react-table';
-import React, { useEffect, useState } from 'react';
+import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/solid';
 import {
-	SBody,
+	STable,
 	SHeader,
 	SHeaderLabel,
-	STable,
-	STD,
 	STH,
+	SBody,
+	STD,
 } from '../../../styles/TableStyles';
-import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
-import { TableDebounceInput } from './TableDebounceInput';
-import { SSelect } from '../../../styles/SelectStyles';
+import { Button } from '@nextui-org/react';
 
-declare module '@tanstack/table-core' {
-	interface FilterMeta {
-		itemRank: RankingInfo;
+type Props = {
+	rows: TableTypes[];
+	handleManualSubmit: (rows: TableTypes[]) => void;
+};
+
+type TableTypes = {
+	id: string;
+	precio: number;
+	name: string;
+	description: string;
+};
+
+declare module '@tanstack/react-table' {
+	interface TableMeta<TData extends RowData> {
+		updateData: (rowIndex: number, columnId: string, value: unknown) => void;
 	}
 }
 
-type Props<T> = {
-	rows: T[];
-	columns: ColumnDef<T>[];
+// Give our default column cell renderer editing superpowers!
+const defaultColumn: Partial<ColumnDef<TableTypes>> = {
+	cell: ({ getValue, row: { index }, column: { id }, table }) => {
+		const initialValue = getValue();
+
+		const [value, setValue] = useState(initialValue);
+
+		const onBlur = () => {
+			table.options.meta?.updateData(index, id, value);
+		};
+
+		useEffect(() => {
+			setValue(initialValue);
+		}, [initialValue]);
+
+		return (
+			<input
+				value={value as string}
+				onChange={(e) => setValue(e.target.value)}
+				onBlur={onBlur}
+			/>
+		);
+	},
 };
 
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-	// Rank the item
-	const itemRank = rankItem(row.getValue(columnId), value);
+export function PrecioTable({ rows, handleManualSubmit }: Props) {
+	const columns = useMemo<ColumnDef<TableTypes>[]>(
+		() => [
+			{
+				accessorKey: 'description',
+				header: () => 'Descripcion',
+				cell: (info) => info.getValue(),
+			},
+			{
+				accessorKey: 'name',
+				header: 'name',
+				cell: (info) => info.getValue(),
+			},
 
-	// Store the itemRank info
-	addMeta({
-		itemRank,
-	});
+			{
+				accessorKey: 'precio',
+				header: () => 'precio',
+				footer: (props) => props.column.id,
+			},
+		],
+		[],
+	);
 
-	// Return if the item should be filtered in/out
-	return itemRank.passed;
-};
-
-const PreciosTarifaTable = <T,>({ rows, columns }: Props<T>) => {
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-	const [globalFilter, setGlobalFilter] = useState('');
+	const [data, setData] = useState(rows);
 
 	const table = useReactTable({
-		data: rows,
+		data,
 		columns,
-		state: {
-			columnFilters,
-			globalFilter,
-		},
-		onColumnFiltersChange: setColumnFilters,
-		onGlobalFilterChange: setGlobalFilter,
-		globalFilterFn: fuzzyFilter,
+		defaultColumn,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		getSortedRowModel: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
-		getFacetedRowModel: getFacetedRowModel(),
-		getFacetedUniqueValues: getFacetedUniqueValues(),
-		getFacetedMinMaxValues: getFacetedMinMaxValues(),
-		debugTable: true,
-		debugHeaders: true,
-		debugColumns: false,
+
+		meta: {
+			updateData: (rowIndex, columnId, value) => {
+				setData((old) =>
+					old.map((row, index) => {
+						if (index === rowIndex) {
+							return {
+								...old[rowIndex]!,
+								[columnId]: value,
+							};
+						}
+						return row;
+					}),
+				);
+			},
+		},
 	});
 
-	useEffect(() => {
-		if (table.getState().columnFilters[0]?.id === 'fullName') {
-			if (table.getState().sorting[0]?.id !== 'fullName') {
-				table.setSorting([{ id: 'fullName', desc: false }]);
-			}
-		}
-	}, [table]);
-
 	return (
-		<Card
-			css={{
-				width: 'auto',
-				padding: '0.5rem',
-				mx: '2rem',
-			}}
-		>
-			<TableDebounceInput
-				value={globalFilter ?? ''}
-				onChange={(value) => setGlobalFilter(String(value))}
-			/>
-
+		<div className="p-2">
+			<div className="h-2" />
 			<STable>
 				<SHeader>
 					{table.getHeaderGroups().map((headerGroup) => (
@@ -147,46 +162,7 @@ const PreciosTarifaTable = <T,>({ rows, columns }: Props<T>) => {
 					))}
 				</SBody>
 			</STable>
-			<div className="h-2" />
-			<div className="flex items-center justify-center gap-2">
-				<Button
-					onClick={() => table.previousPage()}
-					disabled={!table.getCanPreviousPage()}
-					auto
-				>
-					<ChevronLeftIcon className="w-5 h-5" />
-				</Button>
-
-				<strong>
-					{table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
-				</strong>
-
-				<Button
-					onClick={() => table.nextPage()}
-					disabled={!table.getCanNextPage()}
-					auto
-				>
-					<ChevronRightIcon className="w-5 h-5" />
-				</Button>
-
-				<div>
-					<SSelect
-						value={table.getState().pagination.pageSize}
-						onChange={(e) => {
-							table.setPageSize(Number(e.target.value));
-						}}
-					>
-						{[10, 20, 30, 40, 50].map((pageSize) => (
-							<option key={pageSize} value={pageSize}>
-								Mostrar {pageSize}
-							</option>
-						))}
-					</SSelect>
-				</div>
-			</div>
-			<div className="ml-4">{table.getRowModel().rows.length} Registros</div>
-		</Card>
+			<Button onClick={() => handleManualSubmit(data)}>Send</Button>
+		</div>
 	);
-};
-
-export default PreciosTarifaTable;
+}

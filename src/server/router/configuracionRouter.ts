@@ -323,40 +323,23 @@ export const configuracionRouter = createRouter()
 		},
 	})
 	.mutation('updatePrecio', {
-		input: z.object({
-			id: z.string(),
-			precio: z.number(),
-		}),
+		input: z.array(
+			z.object({
+				id: z.string(),
+				precio: z.number(),
+			}),
+		),
 
 		async resolve({ input, ctx }) {
-			let items = [
-				{
-					id: 'cl66xobhb0356p8vrwxmfisgr',
-					precio: 0,
-				},
-				{
-					id: 'cl66xcgzi0120p8vrlyce72ol',
-					precio: 0,
-				},
-				{
-					id: 'cl66xobhb0355p8vr6bdkna8o',
-					precio: 0,
-				},
-			];
-
-			for (let key in items) {
-				console.log(
-					'🚀 ~ file: configuracionRouter.ts ~ line 292 ~ resolve ~ input',
-					input,
-				);
-				console.log('valor key', key);
-
-				await ctx.prisma.itemsTarifa.update({
-					where: { id: input.id },
-					data: {
-						precio: input.precio,
-					},
-				});
-			}
+			await Promise.all(
+				input.map((item) =>
+					ctx.prisma.itemsTarifa.update({
+						where: { id: item.id },
+						data: {
+							precio: item.precio,
+						},
+					}),
+				),
+			);
 		},
 	});

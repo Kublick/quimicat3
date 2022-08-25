@@ -1,10 +1,10 @@
-import { Button, Input } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import { ColumnDef, RowData } from '@tanstack/react-table';
 import React, { useEffect, useState } from 'react';
 
 import { UserLayout } from '../../../components/layout';
+import { PrecioTable } from '../../../components/ui/table/PreciosTarifaTable';
 
-import PreciosTarifaTable from '../../../components/ui/table/PreciosTarifaTable';
 import { trpc } from '../../../utils/trpc';
 
 type TableTypes = {
@@ -27,20 +27,7 @@ const TarifaControlPage = () => {
 
 	const updatePrecio = trpc.useMutation(['configuracion.updatePrecio']);
 
-	const [items, setItems] = useState<any[]>([]);
-
 	if (tarifas.isLoading && isLoading) return <div>Cargando...</div>;
-
-	const onSubmit = (data: any) => {
-		console.log(data);
-
-		// let newArray = Object.entries(data).map((entry) => ({
-		// 	id: entry[0],
-		// 	precio: Number(entry[1]),
-		// }));
-
-		// console.log(newArray);
-	};
 
 	const rows = tarifaControl?.map((prueba) => ({
 		id: prueba.id,
@@ -57,30 +44,14 @@ const TarifaControlPage = () => {
 			: 'Paquete',
 	}));
 
-	const columns: ColumnDef<TableTypes>[] = [
-		{
-			accessorKey: 'description',
-			header: () => 'Descripcion',
-			cell: (info) => info.getValue(),
-		},
-		{
-			accessorKey: 'name',
-			header: 'Nombre',
-
-			cell: (info) => info.getValue(),
-		},
-		{
-			accessorKey: 'precio',
-			header: () => 'Precio',
-			cell: (info) => info.getValue(),
-		},
-	];
-
 	const handleManualSubmit = (data: any) => {
-		console.log('manual submit', items);
-	};
+		const pricesData = data.map((item: any) => ({
+			id: item.id,
+			precio: Number(item.precio),
+		}));
 
-	console.log(items);
+		updatePrecio.mutateAsync(pricesData);
+	};
 
 	return (
 		<UserLayout title="Control de Tarifas">
@@ -99,17 +70,9 @@ const TarifaControlPage = () => {
 
 			<h1>Tarifa Control</h1>
 
-			{rows && <PreciosTarifaTable columns={columns} rows={rows} />}
-			{/* {rows?.map((tests, i) => (
-					<div key={tests.id} className="grid grid-cols-3 gap-2 ">
-						<p className="">{tests.description}</p>
-
-						<Input label={`${tests.name}`} {...register(`${tests.id}`)} />
-					</div>
-				))} */}
-			<Button type="submit" onClick={handleManualSubmit} css={{ mt: '2rem' }}>
-				Guardar
-			</Button>
+			{rows && (
+				<PrecioTable rows={rows} handleManualSubmit={handleManualSubmit} />
+			)}
 		</UserLayout>
 	);
 };
