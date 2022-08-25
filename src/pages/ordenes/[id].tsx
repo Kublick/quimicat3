@@ -1,16 +1,17 @@
-import { PlusCircleIcon } from "@heroicons/react/solid";
-import { Button, Card, Loading, Modal, Text } from "@nextui-org/react";
-import { UserLayout } from "../../components/layout";
-import { Box } from "../../styles/TableStyles";
+import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import Select from "react-select";
-import { IOrden, IPaciente, ordenValidation } from "../../intefaces";
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { UserLayout } from "../../components/layout";
+import { Box } from "../../styles/TableStyles";
+import { Button, Card, Loading, Modal, Text } from "@nextui-org/react";
+import { PlusCircleIcon } from "@heroicons/react/solid";
+import { ICliente, IOrden, IPaciente, ordenValidation } from "../../intefaces";
+import { useForm, Controller } from "react-hook-form";
 import { uiContext } from "../../store/uiSlice";
 import { PacienteInputModal } from "../../components/paciente/PacienteInputModal";
-import paciente from "../paciente";
-import { useState } from "react";
+import { ClienteInputModal } from "../../components/cliente/ClienteInputModal";
 
 const OrdenesRegistro = () => {
   const { showModal, setShowModal } = uiContext();
@@ -18,18 +19,21 @@ const OrdenesRegistro = () => {
   const [showModalPaciente, setShowModalPaciente] = useState(false);
   const [paciente, setPaciente] = useState<IPaciente | null>(null);
 
+  const [showClienteModal, setShowClienteModal] = useState(false);
+  const [cliente, setCliente] = useState<ICliente | null>(null);
+
   const { data: pacientes, isLoading: pacienteIsLoading } = trpc.useQuery([
     "paciente.getPacientes",
   ]);
-  const { data: cliente, isLoading: clienteIsLoading } = trpc.useQuery([
+  const { data: clientes, isLoading: clienteIsLoading } = trpc.useQuery([
     "cliente.getClientes",
   ]);
 
-  const { data: medico, isLoading: medicoIsLoading } = trpc.useQuery([
+  const { data: medicos, isLoading: medicoIsLoading } = trpc.useQuery([
     "medico.getMedicos",
   ]);
 
-  const { data: tarifa, isLoading: tarifaIsLoading } = trpc.useQuery([
+  const { data: tarifas, isLoading: tarifaIsLoading } = trpc.useQuery([
     "configuracion.getTarifas",
   ]);
 
@@ -57,7 +61,7 @@ const OrdenesRegistro = () => {
     // resolver: zodResolver(ordenValidation),
   });
 
-  if (pacienteIsLoading || !pacientes || !cliente || !medico || !tarifa) {
+  if (pacienteIsLoading || !pacientes || !clientes || !medicos || !tarifas) {
     return (
       <Loading
         css={{
@@ -77,17 +81,17 @@ const OrdenesRegistro = () => {
     label: `${paciente.clave} - ${paciente.nombre} ${paciente.apellidos}`,
   }));
 
-  const optionsCliente = cliente.map((cliente) => ({
+  const optionsCliente = clientes.map((cliente) => ({
     value: cliente.id,
     label: `${cliente.nombre}`,
   }));
 
-  const optionsMedico = medico.map((medico) => ({
+  const optionsMedico = medicos.map((medico) => ({
     value: medico.id,
     label: `${medico.nombre}`,
   }));
 
-  const optionsTarifa = tarifa.map((tarifa) => ({
+  const optionsTarifa = tarifas.map((tarifa) => ({
     value: tarifa.id,
     label: `${tarifa.nombre}`,
   }));
@@ -111,7 +115,18 @@ const OrdenesRegistro = () => {
           setShowModalPaciente={setShowModalPaciente}
         />
       </Modal>
-
+      <Modal
+        closeButton
+        aria-labelledby="Departamento"
+        open={showClienteModal}
+        onClose={() => setShowClienteModal(false)}
+      >
+        <ClienteInputModal
+          setCliente={setCliente}
+          cliente={cliente}
+          setShowClienteModal={setShowClienteModal}
+        />
+      </Modal>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           css={{
@@ -146,14 +161,13 @@ const OrdenesRegistro = () => {
                     options={optionsCliente as any}
                     className="flex-1"
                     placeholder="Buscar Cliente"
-                    //    onChange={handleSelectChange}
                   />
                 )}
               />
               <Button
                 auto
                 icon={<PlusCircleIcon className="w-5 h-5" />}
-                onClick={() => setShowModal(true)}
+                onClick={() => setShowClienteModal(true)}
               />
             </Box>
 
