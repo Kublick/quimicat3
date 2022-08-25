@@ -11,7 +11,6 @@ import React, { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { IPaciente, pacienteValidation } from "../../intefaces";
-import { uiContext } from "../../store/uiSlice";
 import { SLabel, SSelect } from "../../styles/SelectStyles";
 import { Box } from "../../styles/TableStyles";
 import { trpc } from "../../utils/trpc";
@@ -20,17 +19,17 @@ type Props = {
   setPaciente: (paciente: IPaciente | null) => void;
   paciente: IPaciente | null;
   mode?: "new" | "edit";
+  setShowModalPaciente: (showModalPaciente: boolean) => void;
 };
 
 export const PacienteInputModal: FC<Props> = ({
   setPaciente,
   paciente,
   mode = "new",
+  setShowModalPaciente,
 }) => {
   const utils = trpc.useContext();
-  const { setShowModal } = uiContext();
   const [disabled, setDisabled] = useState(false);
-
   const { data: clientes } = trpc.useQuery(["cliente.getClientes"]);
 
   const {
@@ -57,8 +56,6 @@ export const PacienteInputModal: FC<Props> = ({
   });
 
   useEffect(() => {
-    console.log(typeof paciente?.fechaNacimiento);
-
     if (paciente) {
       reset({
         ...paciente,
@@ -66,7 +63,6 @@ export const PacienteInputModal: FC<Props> = ({
           ? paciente.fechaNacimiento.toString()
           : "",
       });
-      console.log("paciente", paciente);
     }
   }, [reset, paciente]);
 
@@ -102,7 +98,7 @@ export const PacienteInputModal: FC<Props> = ({
       toast.success("Metodo actualizado correctamente");
     }
 
-    setShowModal(false);
+    setShowModalPaciente(false);
     setDisabled(false);
   };
 
@@ -222,7 +218,7 @@ export const PacienteInputModal: FC<Props> = ({
           />
         </Modal.Body>
         <div className="flex justify-end gap-2 px-4 py-4 mt-4">
-          <Button color="secondary" onClick={() => setShowModal(false)}>
+          <Button color="secondary" onClick={() => setShowModalPaciente(false)}>
             Regresar
           </Button>
           <Button type="submit" disabled={disabled}>
