@@ -5,15 +5,12 @@ import { ClienteInputModal } from "../../components/cliente/ClienteInputModal";
 import ClienteTable from "../../components/cliente/ClienteTable";
 import { UserLayout } from "../../components/layout";
 import { ICliente } from "../../intefaces";
-import { uiContext } from "../../store/uiSlice";
 import { Box } from "../../styles/TableStyles";
 
 const ClientePage = () => {
-  const { showModal, setShowModal } = uiContext();
-
   const [showClienteModal, setShowClienteModal] = useState(false);
 
-  const [cliente, setCliete] = useState<ICliente | null>(null);
+  const [cliente, setCliente] = useState<ICliente | null>(null);
 
   return (
     <UserLayout title="Clientes">
@@ -33,7 +30,7 @@ const ClientePage = () => {
           Crear Cliente
         </Button>
       </Box>
-      <ClienteTable setCliente={setCliete} />
+      <ClienteTable setCliente={setCliente} />
 
       <Modal
         closeButton
@@ -42,7 +39,7 @@ const ClientePage = () => {
         onClose={() => setShowClienteModal(false)}
       >
         <ClienteInputModal
-          setCliente={setCliete}
+          setCliente={setCliente}
           cliente={cliente}
           setShowClienteModal={setShowClienteModal}
         />

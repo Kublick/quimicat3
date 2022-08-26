@@ -7,11 +7,18 @@ import { UserLayout } from "../../components/layout";
 import { Box } from "../../styles/TableStyles";
 import { Button, Card, Loading, Modal, Text } from "@nextui-org/react";
 import { PlusCircleIcon } from "@heroicons/react/solid";
-import { ICliente, IOrden, IPaciente, ordenValidation } from "../../intefaces";
+import {
+  ICliente,
+  IMedico,
+  IOrden,
+  IPaciente,
+  ordenValidation,
+} from "../../intefaces";
 import { useForm, Controller } from "react-hook-form";
 import { uiContext } from "../../store/uiSlice";
 import { PacienteInputModal } from "../../components/paciente/PacienteInputModal";
 import { ClienteInputModal } from "../../components/cliente/ClienteInputModal";
+import MedicoInputModal from "../../components/medico/MedicoInputModal";
 
 const OrdenesRegistro = () => {
   const { showModal, setShowModal } = uiContext();
@@ -21,6 +28,9 @@ const OrdenesRegistro = () => {
 
   const [showClienteModal, setShowClienteModal] = useState(false);
   const [cliente, setCliente] = useState<ICliente | null>(null);
+
+  const [showModalMedico, setShowModalMedico] = useState(false);
+  const [medico, setMedico] = useState<IMedico | null>(null);
 
   const { data: pacientes, isLoading: pacienteIsLoading } = trpc.useQuery([
     "paciente.getPacientes",
@@ -104,7 +114,7 @@ const OrdenesRegistro = () => {
     <UserLayout title="Registro de Ordenes">
       <Modal
         closeButton
-        aria-labelledby="Departamento"
+        aria-labelledby="pacientemodal"
         open={showModalPaciente}
         onClose={() => setShowModalPaciente(false)}
         width="600px"
@@ -117,7 +127,7 @@ const OrdenesRegistro = () => {
       </Modal>
       <Modal
         closeButton
-        aria-labelledby="Departamento"
+        aria-labelledby="clientemodal"
         open={showClienteModal}
         onClose={() => setShowClienteModal(false)}
       >
@@ -125,6 +135,18 @@ const OrdenesRegistro = () => {
           setCliente={setCliente}
           cliente={cliente}
           setShowClienteModal={setShowClienteModal}
+        />
+      </Modal>
+      <Modal
+        closeButton
+        aria-labelledby="medicomodal"
+        open={showModalMedico}
+        onClose={() => setShowModalMedico(false)}
+      >
+        <MedicoInputModal
+          setMedico={setMedico}
+          medico={medico}
+          setShowModalMedico={setShowModalMedico}
         />
       </Modal>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -244,7 +266,7 @@ const OrdenesRegistro = () => {
               <Button
                 auto
                 icon={<PlusCircleIcon className="w-5 h-5" />}
-                //   onClick={() => setShowModal(true)}
+                onClick={() => setShowModalMedico(true)}
               />
             </Box>
 
@@ -287,7 +309,6 @@ const OrdenesRegistro = () => {
                 }}
                 auto
                 icon={<PlusCircleIcon className="w-5 h-5" />}
-                //   onClick={() => setShowModal(true)}
               />
             </Box>
             <Box

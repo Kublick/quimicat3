@@ -4,18 +4,23 @@ import React, { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { IMedico, medicoValidation, metodoValidation } from "../../intefaces";
-import { uiContext } from "../../store/uiSlice";
+
 import { trpc } from "../../utils/trpc";
 
 type Props = {
   medico: IMedico | null;
   setMedico: (medico: IMedico | null) => void;
   mode?: "new" | "edit";
+  setShowModalMedico: (showModalMedico: boolean) => void;
 };
 
-const MedicoInputModal: FC<Props> = ({ medico, setMedico, mode = "new" }) => {
+const MedicoInputModal: FC<Props> = ({
+  medico,
+  setMedico,
+  mode = "new",
+  setShowModalMedico,
+}) => {
   const utils = trpc.useContext();
-  const { setShowModal } = uiContext();
 
   const {
     register,
@@ -71,7 +76,7 @@ const MedicoInputModal: FC<Props> = ({ medico, setMedico, mode = "new" }) => {
       toast.success("Medico actualizado correctamente");
     }
 
-    setShowModal(false);
+    setShowModalMedico(false);
     setDisabled(false);
   };
 
@@ -132,7 +137,11 @@ const MedicoInputModal: FC<Props> = ({ medico, setMedico, mode = "new" }) => {
           />
 
           <div className="flex justify-end gap-2 mt-4">
-            <Button color="secondary" onClick={() => setShowModal(false)} auto>
+            <Button
+              color="secondary"
+              onClick={() => setShowModalMedico(false)}
+              auto
+            >
               Regresar
             </Button>
             <Button type="submit" disabled={disabled} auto>

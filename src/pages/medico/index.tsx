@@ -5,12 +5,12 @@ import { UserLayout } from "../../components/layout";
 import MedicoInputModal from "../../components/medico/MedicoInputModal";
 import { MedicoTable } from "../../components/medico/MedicoTable";
 import { IMedico } from "../../intefaces";
-import { uiContext } from "../../store/uiSlice";
 import { Box } from "../../styles/TableStyles";
 
 const MedicoPage = () => {
-  const { showModal, setShowModal } = uiContext();
   const [medico, setMedico] = useState<IMedico | null>(null);
+  const [showModalMedico, setShowModalMedico] = useState(false);
+
   return (
     <UserLayout title="Medico">
       <Box
@@ -24,7 +24,7 @@ const MedicoPage = () => {
         <Button
           auto
           icon={<PlusCircleIcon className="w-5 h-5" />}
-          onClick={() => setShowModal(true)}
+          onClick={() => setShowModalMedico(true)}
         >
           Crear Medico
         </Button>
@@ -33,10 +33,14 @@ const MedicoPage = () => {
       <Modal
         closeButton
         aria-labelledby="Departamento"
-        open={showModal}
-        onClose={() => setShowModal(false)}
+        open={showModalMedico}
+        onClose={() => setShowModalMedico(false)}
       >
-        <MedicoInputModal setMedico={setMedico} medico={medico} />
+        <MedicoInputModal
+          setMedico={setMedico}
+          medico={medico}
+          setShowModalMedico={setShowModalMedico}
+        />
       </Modal>
     </UserLayout>
   );
