@@ -1,10 +1,10 @@
-import { PlusCircleIcon } from "@heroicons/react/solid";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import { Button, Modal } from "@nextui-org/react";
 import React, { useState } from "react";
 import { ClienteInputModal } from "../../components/cliente/ClienteInputModal";
 import ClienteTable from "../../components/cliente/ClienteTable";
 import { UserLayout } from "../../components/layout";
-import { ICliente } from "../../intefaces";
+import type { ICliente } from "../../intefaces";
 import { Box } from "../../styles/TableStyles";
 
 const ClientePage = () => {
@@ -24,7 +24,7 @@ const ClientePage = () => {
       >
         <Button
           auto
-          icon={<PlusCircleIcon className="w-5 h-5" />}
+          icon={<PlusCircleIcon className="h-5 w-5" />}
           onClick={() => setShowClienteModal(true)}
         >
           Crear Cliente

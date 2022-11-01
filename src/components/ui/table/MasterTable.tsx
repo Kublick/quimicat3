@@ -3,12 +3,13 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronUpIcon,
-} from "@heroicons/react/solid";
+} from "@heroicons/react/20/solid";
+
 import { Button, Card } from "@nextui-org/react";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  FilterFn,
+  type ColumnDef,
+  type ColumnFiltersState,
+  type FilterFn,
   flexRender,
   getCoreRowModel,
   getFacetedMinMaxValues,
@@ -17,8 +18,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingFn,
-  sortingFns,
   useReactTable,
 } from "@tanstack/react-table";
 import React, { useEffect, useState } from "react";
@@ -30,11 +29,7 @@ import {
   STD,
   STH,
 } from "../../../styles/TableStyles";
-import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-} from "@tanstack/match-sorter-utils";
+import { type RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 import { TableDebounceInput } from "./TableDebounceInput";
 import { SSelect } from "../../../styles/SelectStyles";
 
@@ -60,21 +55,6 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 
   // Return if the item should be filtered in/out
   return itemRank.passed;
-};
-
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
-  let dir = 0;
-
-  // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank!,
-      rowB.columnFiltersMeta[columnId]?.itemRank!
-    );
-  }
-
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
 };
 
 const MasterTable = <T,>({ rows, columns }: Props<T>) => {
@@ -145,8 +125,8 @@ const MasterTable = <T,>({ rows, columns }: Props<T>) => {
                           header.getContext()
                         )}
                         {{
-                          asc: <ChevronUpIcon className="w-5 h-5" />,
-                          desc: <ChevronDownIcon className="w-5 h-5" />,
+                          asc: <ChevronUpIcon className="h-5 w-5" />,
+                          desc: <ChevronDownIcon className="h-5 w-5" />,
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     </>
@@ -175,7 +155,7 @@ const MasterTable = <T,>({ rows, columns }: Props<T>) => {
           disabled={!table.getCanPreviousPage()}
           auto
         >
-          <ChevronLeftIcon className="w-5 h-5" />
+          <ChevronLeftIcon className="h-5 w-5" />
         </Button>
 
         <strong>
@@ -187,7 +167,7 @@ const MasterTable = <T,>({ rows, columns }: Props<T>) => {
           disabled={!table.getCanNextPage()}
           auto
         >
-          <ChevronRightIcon className="w-5 h-5" />
+          <ChevronRightIcon className="h-5 w-5" />
         </Button>
 
         <div>

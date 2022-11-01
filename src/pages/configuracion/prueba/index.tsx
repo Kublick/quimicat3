@@ -1,4 +1,4 @@
-import { PlusCircleIcon } from "@heroicons/react/solid";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import { Button, Spacer } from "@nextui-org/react";
 import router from "next/router";
 import React from "react";
@@ -18,7 +18,7 @@ const ConfiguracionPruebaPage = () => {
       >
         <Button
           auto
-          icon={<PlusCircleIcon className="w-5 h-5" />}
+          icon={<PlusCircleIcon className="h-5 w-5" />}
           onClick={() => router.push("/configuracion/prueba/new?view=new")}
         >
           Crear Prueba

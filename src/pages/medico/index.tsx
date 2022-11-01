@@ -1,10 +1,11 @@
-import { PlusCircleIcon } from "@heroicons/react/solid";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import { Button, Modal } from "@nextui-org/react";
 import React, { useState } from "react";
 import { UserLayout } from "../../components/layout";
 import MedicoInputModal from "../../components/medico/MedicoInputModal";
 import { MedicoTable } from "../../components/medico/MedicoTable";
-import { IMedico } from "../../intefaces";
+import { type IMedico } from "../../intefaces";
+
 import { Box } from "../../styles/TableStyles";
 
 const MedicoPage = () => {
@@ -23,7 +24,7 @@ const MedicoPage = () => {
       >
         <Button
           auto
-          icon={<PlusCircleIcon className="w-5 h-5" />}
+          icon={<PlusCircleIcon className="h-5 w-5" />}
           onClick={() => setShowModalMedico(true)}
         >
           Crear Medico

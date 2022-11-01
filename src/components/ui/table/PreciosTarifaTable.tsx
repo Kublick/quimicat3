@@ -1,23 +1,21 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useMemo, useState } from "react";
-import ReactDOM from "react-dom/client";
 
 import {
-  ColumnDef,
+  type ColumnDef,
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   flexRender,
-  RowData,
+  type RowData,
 } from "@tanstack/react-table";
-import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
+import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import {
   STable,
   SHeader,
   SHeaderLabel,
   STH,
-  SBody,
   STD,
 } from "../../../styles/TableStyles";
 import { Button, Input } from "@nextui-org/react";
@@ -141,8 +139,8 @@ export function PrecioTable({ rows, handleManualSubmit }: Props) {
                           header.getContext()
                         )}
                         {{
-                          asc: <ChevronUpIcon className="w-5 h-5" />,
-                          desc: <ChevronDownIcon className="w-5 h-5" />,
+                          asc: <ChevronUpIcon className="h-5 w-5" />,
+                          desc: <ChevronDownIcon className="h-5 w-5" />,
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     </>

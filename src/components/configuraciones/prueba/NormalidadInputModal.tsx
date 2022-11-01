@@ -1,11 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, Input, Button, Text } from "@nextui-org/react";
-import React, { FC, useEffect, useState } from "react";
+import React, { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { array } from "zod";
 import {
   pruebaValorRangoValidation,
-  IPruebaValorRango,
+  type IPruebaValorRango,
 } from "../../../intefaces/prueba";
 import { SLabel, SSelect } from "../../../styles/SelectStyles";
 import { Box, ErrorText } from "../../../styles/TableStyles";

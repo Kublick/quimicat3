@@ -1,4 +1,4 @@
-import { SearchIcon } from "@heroicons/react/solid";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
@@ -35,7 +35,7 @@ export function TableDebounceInput({
         maxWidth: "50%",
         my: "2rem",
       }}
-      contentRight={<SearchIcon className="w-5 h-5" />}
+      contentRight={<MagnifyingGlassIcon className="h-5 w-5" />}
     />
   );
 }

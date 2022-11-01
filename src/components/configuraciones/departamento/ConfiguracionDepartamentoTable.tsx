@@ -1,9 +1,8 @@
-import { PencilIcon } from "@heroicons/react/solid";
+import { PencilIcon } from "@heroicons/react/20/solid";
 import { Col, Loading, Row, Tooltip } from "@nextui-org/react";
-import { ColumnDef } from "@tanstack/react-table";
-import { useRouter } from "next/router";
-import React, { FC } from "react";
-import { IDepartamento } from "../../../intefaces";
+import { type ColumnDef } from "@tanstack/react-table";
+import React, { type FC } from "react";
+import { type IDepartamento } from "../../../intefaces";
 import { uiContext } from "../../../store/uiSlice";
 import { trpc } from "../../../utils/trpc";
 import MasterTable from "../../ui/table/MasterTable";
@@ -15,7 +14,7 @@ type Props = {
 
 const ConfiguracionDepartamentoTable: FC<Props> = ({ setDepartamento }) => {
   const { setShowModal } = uiContext();
-  const { data, isLoading } = trpc.useQuery(["configuracion.getDepartamentos"]);
+  const { data, isLoading } = trpc.configuracion.getDepartamentos.useQuery();
 
   if (isLoading || !data) {
     return (
@@ -46,7 +45,7 @@ const ConfiguracionDepartamentoTable: FC<Props> = ({ setDepartamento }) => {
           <Row css={{ minWidth: "120px" }}>
             <Col css={{ d: "flex", jc: "center" }}>
               <Tooltip content="Editar">
-                <IconButton onClick={() => handleEdit(info.getValue())}>
+                <IconButton onClick={() => handleEdit(String(info.getValue()))}>
                   <PencilIcon className="h-7 w-7" fill="#979797" />
                 </IconButton>
               </Tooltip>

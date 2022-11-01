@@ -1,10 +1,10 @@
-import { PlusCircleIcon } from "@heroicons/react/solid";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import { Button, Modal } from "@nextui-org/react";
 import React, { useState } from "react";
 import { ConfiguracionMuestraTable } from "../../../components/configuraciones/muestra/ConfiguracionMuestraTable";
 import { MuestraModal } from "../../../components/configuraciones/muestra/MuestraModal";
 import { UserLayout } from "../../../components/layout";
-import { IMuestra } from "../../../intefaces";
+import { type IMuestra } from "../../../intefaces";
 import { uiContext } from "../../../store/uiSlice";
 import { Box } from "../../../styles/TableStyles";
 
@@ -23,7 +23,7 @@ const ConfiguracionMuestraPage = () => {
       >
         <Button
           auto
-          icon={<PlusCircleIcon className="w-5 h-5" />}
+          icon={<PlusCircleIcon className="h-5 w-5" />}
           onClick={() => setShowModal(true)}
         >
           Crear Muestra
@@ -32,7 +32,7 @@ const ConfiguracionMuestraPage = () => {
       <ConfiguracionMuestraTable setMuestra={setMuestra} />
       <Modal
         closeButton
-        aria-labelledby="Departamento"
+        aria-labelledby="Muestras"
         open={showModal}
         onClose={() => setShowModal(false)}
       >

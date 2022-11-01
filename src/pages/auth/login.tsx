@@ -1,4 +1,4 @@
-import { ExclamationCircleIcon } from "@heroicons/react/solid";
+import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { Button, Card, Input, Text } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AuthLayout } from "../../components/layout";
 import { Box } from "../../styles/TableStyles";
-
 
 type FormData = {
   password: string;
@@ -85,7 +84,7 @@ const Login = () => {
                   jc: "center",
                 }}
               >
-                <ExclamationCircleIcon className="w-5 h-5" />
+                <ExclamationCircleIcon className="h-5 w-5" />
                 Usuario o contraseña incorrectos
               </Text>
             </Box>

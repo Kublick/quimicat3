@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Modal, Text } from "@nextui-org/react";
-import React, { FC, useEffect, useState } from "react";
+import React, { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { IMedico, medicoValidation, metodoValidation } from "../../intefaces";
+import { type IMedico, medicoValidation } from "../../intefaces";
 
 import { trpc } from "../../utils/trpc";
 
@@ -50,15 +50,15 @@ const MedicoInputModal: FC<Props> = ({
 
   const [disabled, setDisabled] = useState(false);
 
-  const createMedico = trpc.useMutation(["medico.createMedico"], {
+  const createMedico = trpc.medico.createMedico.useMutation({
     onSuccess: () => {
-      utils.invalidateQueries("medico.getMedicos");
+      utils.medico.invalidate();
     },
   });
 
-  const updateMedico = trpc.useMutation(["medico.updateMedico"], {
+  const updateMedico = trpc.medico.updateMedico.useMutation({
     onSuccess: () => {
-      utils.invalidateQueries("medico.getMedicos");
+      utils.medico.invalidate();
     },
   });
 
@@ -136,7 +136,7 @@ const MedicoInputModal: FC<Props> = ({
             helperColor="error"
           />
 
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="mt-4 flex justify-end gap-2">
             <Button
               color="secondary"
               onClick={() => setShowModalMedico(false)}

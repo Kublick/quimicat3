@@ -1,10 +1,10 @@
-import { PlusCircleIcon } from "@heroicons/react/solid";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import { Button, Modal } from "@nextui-org/react";
 import React, { useState } from "react";
 import { ConfiguracionMetodoTable } from "../../../components/configuraciones/metodo/ConfiguracionMetodoTable";
 import { MetodoModal } from "../../../components/configuraciones/metodo/MetodoModal";
 import { UserLayout } from "../../../components/layout";
-import { IMetodo } from "../../../intefaces";
+import { type IMetodo } from "../../../intefaces";
 import { uiContext } from "../../../store/uiSlice";
 import { Box } from "../../../styles/TableStyles";
 
@@ -24,7 +24,7 @@ const ConfiguracionMetodoPage = () => {
       >
         <Button
           auto
-          icon={<PlusCircleIcon className="w-5 h-5" />}
+          icon={<PlusCircleIcon className="h-5 w-5" />}
           onClick={() => setShowModal(true)}
         >
           Crear Metodo

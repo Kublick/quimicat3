@@ -7,10 +7,10 @@ import {
   Loading,
   Textarea,
 } from "@nextui-org/react";
-import React, { FC, useEffect, useState } from "react";
+import React, { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { IPaciente, pacienteValidation } from "../../intefaces";
+import { type IPaciente, pacienteValidation } from "../../intefaces";
 import { SLabel, SSelect } from "../../styles/SelectStyles";
 import { Box } from "../../styles/TableStyles";
 import { trpc } from "../../utils/trpc";
@@ -30,7 +30,7 @@ export const PacienteInputModal: FC<Props> = ({
 }) => {
   const utils = trpc.useContext();
   const [disabled, setDisabled] = useState(false);
-  const { data: clientes } = trpc.useQuery(["cliente.getClientes"]);
+  const { data: clientes } = trpc.cliente.getClientes.useQuery();
 
   const {
     register,
@@ -70,15 +70,15 @@ export const PacienteInputModal: FC<Props> = ({
     mode = "edit";
   }
 
-  const createPaciente = trpc.useMutation(["paciente.createPaciente"], {
+  const createPaciente = trpc.paciente.createPaciente.useMutation({
     onSuccess: () => {
-      utils.invalidateQueries("paciente.getPacientes");
+      utils.paciente.getPacientes.invalidate();
     },
   });
 
-  const updatePaciente = trpc.useMutation(["paciente.updatePaciente"], {
+  const updatePaciente = trpc.paciente.updatePaciente.useMutation({
     onSuccess: () => {
-      utils.invalidateQueries("paciente.getPacientes");
+      utils.paciente.getPacientes.invalidate();
     },
   });
 
@@ -217,7 +217,7 @@ export const PacienteInputModal: FC<Props> = ({
             color="primary"
           />
         </Modal.Body>
-        <div className="flex justify-end gap-2 px-4 py-4 mt-4">
+        <div className="mt-4 flex justify-end gap-2 px-4 py-4">
           <Button color="secondary" onClick={() => setShowModalPaciente(false)}>
             Regresar
           </Button>
