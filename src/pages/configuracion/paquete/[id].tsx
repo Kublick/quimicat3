@@ -1,12 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, Input, Text, Textarea } from "@nextui-org/react";
-import { GetServerSideProps } from "next";
+import { type GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { FC, useEffect, useState } from "react";
+import React, { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { PaqueteSelector } from "../../../components/configuraciones/paquete/PaqueteSelector";
 import { UserLayout } from "../../../components/layout";
-import { IPaquete, paqueteValidation } from "../../../intefaces";
+import { type IPaquete, paqueteValidation } from "../../../intefaces";
 import { Box } from "../../../styles/TableStyles";
 import { trpc } from "../../../utils/trpc";
 import { prisma } from "../../../server/db/client";
@@ -26,8 +26,8 @@ const PaqueteById: FC<Props> = ({ paquete, mode }) => {
   const [selected, setSelected] = useState([]);
   const [disabled, setDisabled] = useState(false);
 
-  const createPaquete = trpc.useMutation(["configuracion.createPaquete"]);
-  const updatePaquete = trpc.useMutation(["configuracion.updatePaquete"]);
+  const createPaquete = trpc.configuracion.createPaquete.useMutation();
+  const updatePaquete = trpc.configuracion.updatePaquete.useMutation();
 
   const {
     register,
@@ -35,7 +35,6 @@ const PaqueteById: FC<Props> = ({ paquete, mode }) => {
     formState: { errors },
     setValue,
     reset,
-    control,
   } = useForm<IPaquete>({
     defaultValues: {
       abreviatura: "",

@@ -1,4 +1,4 @@
-import { PlusCircleIcon } from "@heroicons/react/solid";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import { Button } from "@nextui-org/react";
 import router from "next/router";
 import { UserLayout } from "../../../components/layout";
@@ -17,7 +17,7 @@ const SecurityProfilePage = () => {
       >
         <Button
           auto
-          icon={<PlusCircleIcon className="w-5 h-5" />}
+          icon={<PlusCircleIcon className="h-5 w-5" />}
           onClick={() => router.push("/security/profile/new?view=new")}
         >
           Crear Perfil

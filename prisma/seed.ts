@@ -67,7 +67,7 @@ const createUsers = async () => {
     where: { nombre: "Matriz" },
   });
 
-  let password = "Testing01!";
+  const password = "Testing01!";
 
   const hashedPassword = await bcrypt.hash(password, 10);
 

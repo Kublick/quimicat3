@@ -1,11 +1,11 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Modal, Text } from "@nextui-org/react";
 import { trpc } from "../../../utils/trpc";
 import { toast } from "react-toastify";
 import { uiContext } from "../../../store/uiSlice";
-import { IMetodo, metodoValidation } from "../../../intefaces";
+import { type IMetodo, metodoValidation } from "../../../intefaces";
 
 type Props = {
   mode?: "new" | "edit";
@@ -32,17 +32,17 @@ export const MetodoModal: FC<Props> = ({ mode = "new", metodo, setMetodo }) => {
 
   const [disabled, setDisabled] = useState(false);
 
-  const createMetodo = trpc.useMutation(["configuracion.createMetodo"], {
+  const createMetodo = trpc.configuracion.createMetodo.useMutation({
     onSuccess: () => {
       //invalidate cache
-      utils.invalidateQueries("configuracion.getMetodos");
+      utils.configuracion.getMetodos.invalidate();
     },
   });
 
-  const updateMetodo = trpc.useMutation(["configuracion.updateMetodo"], {
+  const updateMetodo = trpc.configuracion.updateMetodo.useMutation({
     onSuccess: () => {
       //invalidate cache
-      utils.invalidateQueries("configuracion.getMetodos");
+      utils.configuracion.getMetodos.invalidate();
     },
   });
 
@@ -103,7 +103,7 @@ export const MetodoModal: FC<Props> = ({ mode = "new", metodo, setMetodo }) => {
             helperText={errors?.nombre?.message}
             helperColor="error"
           />
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="mt-4 flex justify-end gap-2">
             <Button color="secondary" onClick={() => setShowModal(false)} auto>
               Regresar
             </Button>

@@ -1,10 +1,10 @@
-import { PlusCircleIcon } from "@heroicons/react/solid";
-import { Button, Card, Modal } from "@nextui-org/react";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
+import { Button, Modal } from "@nextui-org/react";
 import React, { useState } from "react";
 import ConfiguracionDepartamentoTable from "../../../components/configuraciones/departamento/ConfiguracionDepartamentoTable";
 import { DepartamentoModal } from "../../../components/configuraciones/departamento/DepartamentoModal";
 import { UserLayout } from "../../../components/layout";
-import { IDepartamento } from "../../../intefaces";
+import type { IDepartamento } from "../../../intefaces";
 import { uiContext } from "../../../store/uiSlice";
 import { Box } from "../../../styles/TableStyles";
 
@@ -25,7 +25,7 @@ const ConfiguacionesDepartamentoPage = () => {
       >
         <Button
           auto
-          icon={<PlusCircleIcon className="w-5 h-5" />}
+          icon={<PlusCircleIcon className="h-5 w-5" />}
           onClick={() => setShowModal(true)}
         >
           Crear Departamento

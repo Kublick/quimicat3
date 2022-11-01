@@ -1,8 +1,8 @@
-import { PencilIcon } from "@heroicons/react/solid";
+import { PencilIcon } from "@heroicons/react/20/solid";
 import { Loading, Row, Col, Tooltip } from "@nextui-org/react";
-import { ColumnDef } from "@tanstack/react-table";
-import React, { FC } from "react";
-import { IMedico, IMetodo } from "../../intefaces";
+import { type ColumnDef } from "@tanstack/react-table";
+import React, { type FC } from "react";
+import { type IMedico } from "../../intefaces";
 import { uiContext } from "../../store/uiSlice";
 import { trpc } from "../../utils/trpc";
 import MasterTable from "../ui/table/MasterTable";
@@ -14,7 +14,7 @@ type Props = {
 
 export const MedicoTable: FC<Props> = ({ setMedico }) => {
   const { setShowModal } = uiContext();
-  const { data, isLoading } = trpc.useQuery(["medico.getMedicos"]);
+  const { data, isLoading } = trpc.medico.getMedicos.useQuery();
 
   if (isLoading || !data) {
     return (

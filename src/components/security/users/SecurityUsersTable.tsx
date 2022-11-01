@@ -1,8 +1,8 @@
-import { PencilIcon } from "@heroicons/react/solid";
+import { PencilIcon } from "@heroicons/react/20/solid";
 import { Col, Loading, Row, Tooltip } from "@nextui-org/react";
-import { ColumnDef } from "@tanstack/react-table";
+import { type ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/router";
-import { IUser } from "../../../intefaces/user";
+import { type IUser } from "../../../intefaces/user";
 import { trpc } from "../../../utils/trpc";
 import MasterTable from "../../ui/table/MasterTable";
 import { IconButton } from "../../ui/utils/IconButton";
@@ -10,7 +10,7 @@ import { IconButton } from "../../ui/utils/IconButton";
 export const SecurityUsersTable = () => {
   const router = useRouter();
 
-  const { data, isLoading } = trpc.useQuery(["security.getUsers"]);
+  const { data, isLoading } = trpc.security.getUsers.useQuery();
 
   if (isLoading || !data) {
     return (
@@ -66,7 +66,9 @@ export const SecurityUsersTable = () => {
           <Row css={{ minWidth: "120px" }}>
             <Col css={{ d: "flex", jc: "center" }}>
               <Tooltip content="Editar">
-                <IconButton onClick={() => handleEditUser(info.getValue())}>
+                <IconButton
+                  onClick={() => handleEditUser(String(info.getValue()))}
+                >
                   <PencilIcon className="h-7 w-7" fill="#979797" />
                 </IconButton>
               </Tooltip>

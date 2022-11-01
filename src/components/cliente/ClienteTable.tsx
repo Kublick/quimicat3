@@ -1,8 +1,8 @@
-import { PencilIcon } from "@heroicons/react/solid";
+import { PencilIcon } from "@heroicons/react/20/solid";
 import { Col, Loading, Row, Tooltip } from "@nextui-org/react";
-import { ColumnDef } from "@tanstack/react-table";
-import React, { FC } from "react";
-import { ICliente, IMetodo } from "../../intefaces";
+import { type ColumnDef } from "@tanstack/react-table";
+import React, { type FC } from "react";
+import type { ICliente } from "../../intefaces";
 import { uiContext } from "../../store/uiSlice";
 import { trpc } from "../../utils/trpc";
 import MasterTable from "../ui/table/MasterTable";
@@ -19,7 +19,7 @@ interface IClienteTableProps extends ICliente {
 const ClienteTable: FC<Props> = ({ setCliente }) => {
   const { setShowModal } = uiContext();
 
-  const { data, isLoading } = trpc.useQuery(["cliente.getClientes"]);
+  const { data, isLoading } = trpc.cliente.getClientes.useQuery();
 
   if (isLoading || !data) {
     return (

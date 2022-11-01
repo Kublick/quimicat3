@@ -1,8 +1,8 @@
-import { PencilIcon } from "@heroicons/react/solid";
+import { PencilIcon } from "@heroicons/react/20/solid";
 import { Loading, Row, Col, Tooltip } from "@nextui-org/react";
-import { ColumnDef } from "@tanstack/react-table";
-import React, { FC, useState } from "react";
-import { ICliente, IPaciente } from "../../intefaces";
+import { type ColumnDef } from "@tanstack/react-table";
+import React, { type FC } from "react";
+import type { IPaciente } from "../../intefaces";
 import { uiContext } from "../../store/uiSlice";
 import { trpc } from "../../utils/trpc";
 import MasterTable from "../ui/table/MasterTable";
@@ -15,7 +15,7 @@ type Props = {
 export const PacienteTable: FC<Props> = ({ setPaciente }) => {
   const { setShowModal } = uiContext();
 
-  const { data, isLoading } = trpc.useQuery(["paciente.getPacientes"]);
+  const { data, isLoading } = trpc.paciente.getPacientes.useQuery();
 
   if (isLoading || !data) {
     return (
@@ -81,7 +81,7 @@ export const PacienteTable: FC<Props> = ({ setPaciente }) => {
           <Row css={{ minWidth: "120px" }}>
             <Col css={{ d: "flex", jc: "center" }}>
               <Tooltip content="Editar">
-                <IconButton onClick={() => handleEdit(info.getValue())}>
+                <IconButton onClick={() => handleEdit(String(info.getValue()))}>
                   <PencilIcon className="h-7 w-7" fill="#979797" />
                 </IconButton>
               </Tooltip>

@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, Input, Button, Text, Loading } from "@nextui-org/react";
-import React, { FC, useEffect, useState } from "react";
+import React, { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { clienteValidation, ICliente } from "../../intefaces";
+import { type ICliente, clienteValidation } from "../../intefaces";
 import { SLabel, SSelect } from "../../styles/SelectStyles";
 import { Box } from "../../styles/TableStyles";
 import { trpc } from "../../utils/trpc";
@@ -25,7 +25,7 @@ export const ClienteInputModal: FC<Props> = ({
 
   const [disabled, setDisabled] = useState(false);
 
-  const { data } = trpc.useQuery(["configuracion.getTarifas"]);
+  const { data } = trpc.configuracion.getTarifas.useQuery();
 
   const {
     register,
@@ -47,15 +47,15 @@ export const ClienteInputModal: FC<Props> = ({
     resolver: zodResolver(clienteValidation),
   });
 
-  const createCliente = trpc.useMutation(["cliente.createCliente"], {
+  const createCliente = trpc.cliente.createCliente.useMutation({
     onSuccess: () => {
-      utils.invalidateQueries("cliente.getClientes");
+      utils.cliente.invalidate();
     },
   });
 
-  const updateCliente = trpc.useMutation(["cliente.updateCliente"], {
+  const updateCliente = trpc.cliente.updateCliente.useMutation({
     onSuccess: () => {
-      utils.invalidateQueries("cliente.getClientes");
+      utils.cliente.invalidate();
     },
   });
 
@@ -133,7 +133,7 @@ export const ClienteInputModal: FC<Props> = ({
             label="Abreviatura"
             {...register("abreviatura")}
             color="primary"
-            helperText={errors?.abreviatura?.message}
+            helperText={errors?.abreviatura?.message as string}
             helperColor="error"
           />
           <Input
@@ -196,7 +196,7 @@ export const ClienteInputModal: FC<Props> = ({
             helperColor="error"
           />
 
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="mt-4 flex justify-end gap-2">
             <Button
               color="secondary"
               onClick={() => setShowClienteModal(false)}

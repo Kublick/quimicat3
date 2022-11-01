@@ -1,24 +1,17 @@
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import Select from "react-select";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import { UserLayout } from "../../components/layout";
 import { Box } from "../../styles/TableStyles";
 import { Button, Card, Loading, Modal, Text } from "@nextui-org/react";
-import { PlusCircleIcon } from "@heroicons/react/solid";
-import {
-  ICliente,
-  IMedico,
-  IOrden,
-  IPaciente,
-  ordenValidation,
-} from "../../intefaces";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
+import type { ICliente, IMedico, IOrden, IPaciente } from "../../intefaces";
 import { useForm, Controller } from "react-hook-form";
 import { uiContext } from "../../store/uiSlice";
 import { PacienteInputModal } from "../../components/paciente/PacienteInputModal";
 import { ClienteInputModal } from "../../components/cliente/ClienteInputModal";
 import MedicoInputModal from "../../components/medico/MedicoInputModal";
+import { UserLayout } from "../../components/layout";
 
 const OrdenesRegistro = () => {
   const { showModal, setShowModal } = uiContext();
@@ -32,20 +25,19 @@ const OrdenesRegistro = () => {
   const [showModalMedico, setShowModalMedico] = useState(false);
   const [medico, setMedico] = useState<IMedico | null>(null);
 
-  const { data: pacientes, isLoading: pacienteIsLoading } = trpc.useQuery([
-    "paciente.getPacientes",
-  ]);
-  const { data: clientes, isLoading: clienteIsLoading } = trpc.useQuery([
-    "cliente.getClientes",
-  ]);
+  const { data: pacientes, isLoading: pacienteIsLoading } =
+    trpc.paciente.getPacientes.useQuery();
 
-  const { data: medicos, isLoading: medicoIsLoading } = trpc.useQuery([
-    "medico.getMedicos",
-  ]);
+  console.log(pacientes);
 
-  const { data: tarifas, isLoading: tarifaIsLoading } = trpc.useQuery([
-    "configuracion.getTarifas",
-  ]);
+  const { data: clientes, isLoading: clienteIsLoading } =
+    trpc.cliente.getClientes.useQuery();
+
+  const { data: medicos, isLoading: medicoIsLoading } =
+    trpc.medico.getMedicos.useQuery();
+
+  const { data: tarifas, isLoading: tarifaIsLoading } =
+    trpc.configuracion.getTarifas.useQuery();
 
   const {
     register,
@@ -188,7 +180,7 @@ const OrdenesRegistro = () => {
               />
               <Button
                 auto
-                icon={<PlusCircleIcon className="w-5 h-5" />}
+                icon={<PlusCircleIcon className="h-5 w-5" />}
                 onClick={() => setShowClienteModal(true)}
               />
             </Box>
@@ -227,7 +219,7 @@ const OrdenesRegistro = () => {
 
               <Button
                 auto
-                icon={<PlusCircleIcon className="w-5 h-5" />}
+                icon={<PlusCircleIcon className="h-5 w-5" />}
                 onClick={() => setShowModalPaciente(true)}
               />
             </Box>
@@ -265,7 +257,7 @@ const OrdenesRegistro = () => {
 
               <Button
                 auto
-                icon={<PlusCircleIcon className="w-5 h-5" />}
+                icon={<PlusCircleIcon className="h-5 w-5" />}
                 onClick={() => setShowModalMedico(true)}
               />
             </Box>
@@ -308,7 +300,7 @@ const OrdenesRegistro = () => {
                   opacity: 0,
                 }}
                 auto
-                icon={<PlusCircleIcon className="w-5 h-5" />}
+                icon={<PlusCircleIcon className="h-5 w-5" />}
               />
             </Box>
             <Box

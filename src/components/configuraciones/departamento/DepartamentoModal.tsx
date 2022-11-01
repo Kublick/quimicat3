@@ -1,11 +1,11 @@
-import React, { FC, useState } from "react";
+import React, { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Modal, Text } from "@nextui-org/react";
 import { trpc } from "../../../utils/trpc";
 import { toast } from "react-toastify";
 import { uiContext } from "../../../store/uiSlice";
-import { departamentoValidation, IDepartamento } from "../../../intefaces";
+import { departamentoValidation, type IDepartamento } from "../../../intefaces";
 
 type Props = {
   mode?: "new" | "edit";
@@ -36,25 +36,17 @@ export const DepartamentoModal: FC<Props> = ({
 
   const [disabled, setDisabled] = useState(false);
 
-  const createDepartamento = trpc.useMutation(
-    ["configuracion.createDepartamento"],
-    {
-      onSuccess: () => {
-        //invalidate cache
-        utils.invalidateQueries("configuracion.getDepartamentos");
-      },
-    }
-  );
+  const createDepartamento = trpc.configuracion.createDepartamento.useMutation({
+    onSuccess: () => {
+      utils.configuracion.getDepartamentos.invalidate();
+    },
+  });
 
-  const updateDepartamento = trpc.useMutation(
-    ["configuracion.updateDepartamento"],
-    {
-      onSuccess: () => {
-        //invalidate cache
-        utils.invalidateQueries("configuracion.getDepartamentos");
-      },
-    }
-  );
+  const updateDepartamento = trpc.configuracion.updateDepartamento.useMutation({
+    onSuccess: () => {
+      utils.configuracion.getDepartamentos.invalidate();
+    },
+  });
 
   if (departamento) {
     reset({ ...departamento });
@@ -110,7 +102,7 @@ export const DepartamentoModal: FC<Props> = ({
             helperText={errors?.nombre?.message}
             helperColor="error"
           />
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="mt-4 flex justify-end gap-2">
             <Button color="secondary" onClick={() => setShowModal(false)} auto>
               Regresar
             </Button>

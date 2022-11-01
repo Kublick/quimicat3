@@ -1,10 +1,10 @@
-import { PlusCircleIcon } from "@heroicons/react/solid";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import { Button, Modal } from "@nextui-org/react";
 import React, { useState } from "react";
 import { UserLayout } from "../../components/layout";
 import { PacienteInputModal } from "../../components/paciente/PacienteInputModal";
 import { PacienteTable } from "../../components/paciente/PacienteTable";
-import { IMedico, IPaciente } from "../../intefaces";
+import type { IPaciente } from "../../intefaces";
 import { Box } from "../../styles/TableStyles";
 
 const PacientePage = () => {
@@ -23,7 +23,7 @@ const PacientePage = () => {
       >
         <Button
           auto
-          icon={<PlusCircleIcon className="w-5 h-5" />}
+          icon={<PlusCircleIcon className="h-5 w-5" />}
           onClick={() => setShowModalPaciente(true)}
         >
           Crear Paciente

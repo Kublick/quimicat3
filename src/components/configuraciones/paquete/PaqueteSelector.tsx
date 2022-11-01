@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { type FC, useEffect, useState } from "react";
 import Select from "react-select";
 import { trpc } from "../../../utils/trpc";
 import { Box } from "../../../styles/TableStyles";
-import { Button, Loading, styled, Text } from "@nextui-org/react";
+import { Loading, Text } from "@nextui-org/react";
 import { Reorder } from "framer-motion";
 import { Item } from "../../ui/drag/Item";
 
@@ -17,8 +17,8 @@ export const PaqueteSelector: FC<Props> = ({
   setSelected,
   setValue,
 }) => {
-  const { data: pruebas } = trpc.useQuery(["configuracion.getPruebas"]);
-  const { data: perfiles } = trpc.useQuery(["configuracion.getPerfiles"]);
+  const { data: pruebas } = trpc.configuracion.getPruebas.useQuery();
+  const { data: perfiles } = trpc.configuracion.getPerfiles.useQuery();
 
   const [items, setItems] = useState([]);
 
@@ -96,21 +96,23 @@ export const PaqueteSelector: FC<Props> = ({
           onChange={handleSelectChange}
         />
       </Box>
-      <Reorder.Group
-        axis={"y"}
-        values={items}
-        onReorder={(values) => reorderItem(values)}
-      >
-        {items.map((item: any) => (
-          <div key={item.value}>
-            <Item
-              key={item.value}
-              item={item}
-              handleRemoveValue={handleRemoveValue}
-            />
-          </div>
-        ))}
-      </Reorder.Group>
+      {items && (
+        <Reorder.Group
+          axis={"y"}
+          values={items}
+          onReorder={(values) => reorderItem(values)}
+        >
+          {items.map((item: any) => (
+            <div key={item.value}>
+              <Item
+                key={item.value}
+                item={item}
+                handleRemoveValue={handleRemoveValue}
+              />
+            </div>
+          ))}
+        </Reorder.Group>
+      )}
     </>
   );
 };

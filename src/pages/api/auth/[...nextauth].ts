@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
           placeholder: "Enter your password",
         },
       },
-      async authorize(credentials, _req) {
+      async authorize(credentials) {
         const user = await dbUser.checkUserPassword(
           credentials!.username,
           credentials!.password
